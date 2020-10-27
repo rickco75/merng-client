@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 
 import { Grid, Transition } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
@@ -12,7 +12,7 @@ function Home(props) {
     loading,
     data
   } = useQuery(FETCH_POSTS_QUERY);
-  
+
   function deletePostCallback() {
     props.history.push('/')
   }
@@ -34,13 +34,15 @@ function Home(props) {
             <PostForm />
           </Grid.Column>
         )}
+      </Grid.Row>
+      <Grid.Row>
         {loading ? (
           <h1>Loading posts...</h1>
         ) : (
             <Transition.Group>
               {
                 data.getPosts && data.getPosts.map(post => (
-                  <Grid.Column key={post.id} style={{marginBottom: 20}}>
+                  <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
                     <PostCard callback={deletePostCallback} post={post} />
                   </Grid.Column>
                 ))

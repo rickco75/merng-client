@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, gql } from '@apollo/client'
 import { Icon, Label, Button } from 'semantic-ui-react'
 import MyPopup from '../util/MyPopup'
 
-import gql from 'graphql-tag'
+//import gql from 'graphql-tag'
 
 function LikeButton({ user, post: { id, likeCount, likes } }) {
 

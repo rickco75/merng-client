@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Icon, Confirm } from 'semantic-ui-react'
-import { useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { useMutation, gql } from '@apollo/client'
+//import gql from 'graphql-tag'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
 import MyPopup from '../util/MyPopup'
 
@@ -17,8 +17,11 @@ function DeleteButton({ postId, commentId, callback }) {
         const data = proxy.readQuery({
           query: FETCH_POSTS_QUERY
         })
-        data.getPosts = data.getPosts.filter(p => p.id !== postId)
-        proxy.writeQuery({ query: FETCH_POSTS_QUERY, data })
+        const newData = {...data}
+        //data.getPosts = data.getPosts.filter(p => p.id !== postId)
+        newData.getPosts = newData.getPosts.filter(p => p.id !== postId)
+        proxy.writeQuery({ query: FETCH_POSTS_QUERY, data: newData })
+        // proxy.writeQuery({ query: FETCH_POSTS_QUERY, data })
       }
 
       if (callback) callback()

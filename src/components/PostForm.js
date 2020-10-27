@@ -60,7 +60,7 @@ function PostForm() {
       <Form onSubmit={onSubmit}>
         <h2>Create a post: </h2>
         <Form.Field>
-          <Form.Input
+          <Form.TextArea
             placeholder="Hi World!"
             name="body"
             onChange={onChange}

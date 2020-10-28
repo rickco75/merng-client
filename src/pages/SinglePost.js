@@ -39,8 +39,7 @@ function SinglePost(props) {
   if (loading) {
     postMarkup = <p>Loading post...</p>
   } else {
-    const { id, body, createdAt, username, comments, likes, likeCount, commentCount } = data.getPost
-
+    const { id, body, createdAt, username, comments, likes, likeCount, commentCount, url } = data.getPost
 
     function deletePostCallback() {
       props.history.push('/')
@@ -61,6 +60,13 @@ function SinglePost(props) {
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
                 <Card.Description>{body}</Card.Description>
+                {url && 
+                  <Card.Description>
+                    <Image
+                      src={url}
+                      size="medium" />
+                  </Card.Description>
+                }
               </Card.Content>
               <hr />
               <Card.Content extra>
@@ -165,6 +171,7 @@ const FETCH_POST_QUERY = gql`
         createdAt
         body
       }
+      url
     }
   }
 `

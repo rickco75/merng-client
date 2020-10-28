@@ -8,7 +8,7 @@ import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
 import MyPopup from '../util/MyPopup'
 
-function PostCard({ callback, post: { body, createdAt, id, username, likeCount, commentCount, likes } }) {
+function PostCard({ callback, post: { body, createdAt, id, username, likeCount, commentCount, likes, url } }) {
 
 
   const { user } = useContext(AuthContext)
@@ -32,6 +32,13 @@ function PostCard({ callback, post: { body, createdAt, id, username, likeCount, 
         <Card.Description>
           {body}
         </Card.Description>
+        {url &&
+          <Card.Description>
+            <Image circular
+              src={url}
+              size="small" />
+          </Card.Description>
+        }
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
@@ -46,7 +53,6 @@ function PostCard({ callback, post: { body, createdAt, id, username, likeCount, 
             </Label>
           </Button>
         </MyPopup>
-
         {user && user.username === username && <DeleteButton callback={callback} postId={id} />}
       </Card.Content>
     </Card>

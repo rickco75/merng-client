@@ -14,3 +14,13 @@
 .ui.teal.buttons .button:focus {
   background-color: #00b5ad;
 }
+
+.homeHeader {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  letter-spacing: 7pt;
+}
+
+body {
+  background-color: beige;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}

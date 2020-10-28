@@ -16,7 +16,7 @@ function MenuBar() {
   const [activeItem, setActiveItem] = useState(path)
 
   const menuBar = user ? (
-    <Menu pointing secondary size="massive" color="teal">
+    <Menu pointing secondary size="large" color="teal">
       <Menu.Item
         name={user.username}
         active
@@ -31,7 +31,7 @@ function MenuBar() {
       </Menu.Menu>
     </Menu>
   ) : (
-      <Menu pointing secondary size="massive" color="teal">
+      <Menu pointing secondary size="large" color="teal">
         <Menu.Item
           name='home'
           active={activeItem === 'home'}

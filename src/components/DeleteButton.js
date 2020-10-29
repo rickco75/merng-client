@@ -18,10 +18,18 @@ function DeleteButton({ postId, commentId, callback }) {
           query: FETCH_POSTS_QUERY
         })
         const newData = {...data}
-        //data.getPosts = data.getPosts.filter(p => p.id !== postId)
-        newData.getPosts = newData.getPosts.filter(p => p.id !== postId)
-        proxy.writeQuery({ query: FETCH_POSTS_QUERY, data: newData })
-        // proxy.writeQuery({ query: FETCH_POSTS_QUERY, data })
+        newData.getPosts = newData.getPosts.filter(p => p.id !== postId)   
+        
+        // Necessary to avoid errors updating the cache     
+        proxy.evict({
+          fieldName: "getPosts",
+          broadcast: false
+        })
+        proxy.writeQuery({ 
+            query: FETCH_POSTS_QUERY, data: {
+              getPosts: [...newData.getPosts]
+            } 
+        })
       }
 
       if (callback) callback()

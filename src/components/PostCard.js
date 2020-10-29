@@ -34,7 +34,7 @@ function PostCard({ callback, post: { body, createdAt, id, username, likeCount, 
         </Card.Description>
         {url &&
           <Card.Description>
-            <Image circular
+            <Image 
               src={url}
               size="small" />
           </Card.Description>

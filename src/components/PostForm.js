@@ -17,6 +17,7 @@ function PostForm() {
 
   const [uploadFile] = useMutation(UPLOAD_FILE, {
     onCompleted: data => {
+      console.log(data)
       values.url = data.uploadFile.url
     }
   })
@@ -71,8 +72,7 @@ function PostForm() {
           <input
             type="file"
             ref={uploadFileRef}
-            onChange={handleFileChange}
-            label="Upload File" />
+            onChange={handleFileChange} />
 
           <p id="uploadMessage"></p>
 

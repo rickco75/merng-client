@@ -5,13 +5,15 @@ import { Grid, Transition } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
-import { FETCH_POSTS_QUERY, POST_SUBSCRIPTION } from '../util/graphql'
+import { FETCH_POSTS_QUERY, POST_SUBSCRIPTION, DELETE_POST_SUBSCRIPTION } from '../util/graphql'
 
 function Home(props) {
 
   const { subscribeToMore, loading, data, refetch } = useQuery(FETCH_POSTS_QUERY);
   
-  const { newPost,  subLoading } = useSubscription(POST_SUBSCRIPTION)
+  useSubscription(POST_SUBSCRIPTION)
+  useSubscription(DELETE_POST_SUBSCRIPTION)
+
 
   const { user } = useContext(AuthContext)
 
@@ -25,19 +27,34 @@ function Home(props) {
       updateQuery: (prev, {subscriptionData}) => {
         if (!subscriptionData.data) return prev
         const newFeedItem = subscriptionData.data.newPost
+        console.log("newFeedItem ", newFeedItem)
         return Object.assign( {}, prev, {
           getPosts: [newFeedItem, ...prev.getPosts]
         })
       }
     })
   } 
+
+  const subscribeToDeletedPosts = () => {
+    subscribeToMore({
+      document: DELETE_POST_SUBSCRIPTION,
+      updateQuery: (prev, {subscriptionData}) => {
+        if (!subscriptionData.data) return prev
+        const newFeedItems = subscriptionData.data.deletePostSub
+        // console.log("newFeedItems ", newFeedItems)
+        return Object.assign( {}, prev, {
+          getPosts: newFeedItems
+        })
+      }
+    })    
+  }
   
   useEffect(()=>{
     subscribeToNewPosts()
   },[])
   
   return (
-    <Grid columns={2}>
+    <Grid columns={1}>
       <Grid.Row className="page-title ">
         <h1 className="homeHeader">Recent Posts</h1>
       </Grid.Row>
@@ -61,6 +78,7 @@ function Home(props) {
                       >
                     <PostCard 
                       callback={deletePostCallback} 
+                      subscribeToDeletedPosts={subscribeToDeletedPosts}
                       post={post} 
                       refetch={refetch}                       
                       />

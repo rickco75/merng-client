@@ -47,3 +47,26 @@ export const POST_SUBSCRIPTION = gql`
     }
   }
 `
+
+export const DELETE_POST_SUBSCRIPTION = gql`
+  subscription OnPostDeleted{
+    deletePostSub{
+      id 
+      body 
+      createdAt 
+      username 
+      likeCount
+      likes {
+        username
+      }
+      commentCount
+      comments {
+        id 
+        username 
+        createdAt 
+        body
+      }
+      url
+    }
+  }
+`

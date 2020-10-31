@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Icon, Confirm } from 'semantic-ui-react'
 import { useMutation, gql } from '@apollo/client'
 //import gql from 'graphql-tag'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
 import MyPopup from '../util/MyPopup'
 
-function DeleteButton({ postId, commentId, callback }) {
+function DeleteButton({ subscribeToDeletedPosts, postId, commentId, callback }) {
+
   const [confirmOpen, setConfirmOpen] = useState(false)
 
+  useEffect(()=> {
+    subscribeToDeletedPosts()
+  },[])
 
+  
   const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
+
   const [deletePostOrMutation] = useMutation(mutation, {
     update(proxy) {
       setConfirmOpen(false)
+      // subscribeToNewPosts()
       if (!commentId) {
         const data = proxy.readQuery({
           query: FETCH_POSTS_QUERY
@@ -39,6 +46,7 @@ function DeleteButton({ postId, commentId, callback }) {
       commentId
     }
   })
+
   return (
     <>
       <MyPopup

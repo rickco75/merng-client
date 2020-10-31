@@ -10,7 +10,6 @@ import MyPopup from '../util/MyPopup'
 
 function PostCard({ callback, post: { body, createdAt, id, username, likeCount, commentCount, likes, url } }) {
 
-
   const { user } = useContext(AuthContext)
 
   const avatarPopupMessage = `${username} has been a member since ${moment(createdAt).format("MMM yyyy")}`

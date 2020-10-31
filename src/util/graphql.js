@@ -24,3 +24,26 @@ export const FETCH_POSTS_QUERY = gql`
   }
 }
 `
+
+export const POST_SUBSCRIPTION = gql`
+  subscription OnPostAdded{
+    newPost{
+      id 
+      body 
+      createdAt 
+      username 
+      likeCount
+      likes {
+        username
+      }
+      commentCount
+      comments {
+        id 
+        username 
+        createdAt 
+        body
+      }
+      url
+    }
+  }
+`

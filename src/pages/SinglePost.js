@@ -8,17 +8,44 @@ import { AuthContext } from '../context/auth'
 import DeleteButton from '../components/DeleteButton'
 import MyPopup from '../util/MyPopup'
 
+const FETCH_POST_QUERY = gql`
+  query($postId:ID!){
+    getPost(postId: $postId){
+      id
+      body
+      createdAt
+      username
+      likeCount
+      likes{
+        username
+      }
+      commentCount
+      comments {
+        id
+        username
+        createdAt
+        body
+      }
+      url
+    }
+  }
+`
+
 function SinglePost(props) {
 
   const { user } = useContext(AuthContext)
   const commentInputRef = useRef(null)
 
   const postId = props.match.params.postId
+
   const [comment, setComment] = useState('')
 
   const { loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId
+    },
+    onError: err => {
+      console.log(err)
     }
   })
 
@@ -38,6 +65,8 @@ function SinglePost(props) {
 
   if (loading) {
     postMarkup = <p>Loading post...</p>
+  } else if (!data) {
+      postMarkup = <p>There was an error loading your post!</p>
   } else {
     const { id, body, createdAt, username, comments, likes, likeCount, commentCount, url } = data.getPost
 
@@ -60,7 +89,7 @@ function SinglePost(props) {
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
                 <Card.Description>{body}</Card.Description>
-                {url && 
+                {url &&
                   <Card.Description>
                     <Image
                       src={url}
@@ -153,27 +182,6 @@ const SUBMIT_COMMENT_MUTATION = gql`
     }
   }
 `
-const FETCH_POST_QUERY = gql`
-  query($postId:ID!){
-    getPost(postId: $postId){
-      id
-      body
-      createdAt
-      username
-      likeCount
-      likes{
-        username
-      }
-      commentCount
-      comments {
-        id
-        username
-        createdAt
-        body
-      }
-      url
-    }
-  }
-`
+
 
 export default SinglePost

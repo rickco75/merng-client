@@ -19,9 +19,9 @@ function DeleteButton({ postId, commentId, callback }) {
         })
         const newData = {...data}
         newData.getPosts = newData.getPosts.filter(p => p.id !== postId)   
-        
+
         // Necessary to avoid errors updating the cache     
-        proxy.evict({
+        proxy.evict({          
           fieldName: "getPosts",
           broadcast: false
         })

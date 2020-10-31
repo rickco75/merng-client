@@ -10,7 +10,9 @@ function DeleteButton({ subscribeToDeletedPosts, postId, commentId, callback }) 
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(()=> {
-    subscribeToDeletedPosts()
+    if (subscribeToDeletedPosts) {
+      subscribeToDeletedPosts()
+    }
   },[])
 
   

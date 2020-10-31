@@ -17,13 +17,13 @@ import { getMainDefinition } from 'apollo-utilities'
 // })
 
 const uploadLink = createUploadLink({
-  // uri: 'https://mighty-caverns-32856.herokuapp.com'
-  uri: 'http://localhost:5000/graphql/',
+  uri: 'https://mighty-caverns-32856.herokuapp.com/graphql/'
+  // uri: 'http://localhost:5000/graphql/',
 })
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:5000/graphql',
-  // uri: 'ws://mighty-caverns-32856.herokuapp.com',
+  // uri: 'ws://localhost:5000/graphql',
+  uri: 'ws://mighty-caverns-32856.herokuapp.com/graphql',
   options: {
     reconnect: true
   }

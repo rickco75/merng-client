@@ -23,7 +23,7 @@ const uploadLink = createUploadLink({
 
 const wsLink = new WebSocketLink({
   // uri: 'ws://localhost:5000/graphql',
-  uri: 'ws://mighty-caverns-32856.herokuapp.com/graphql',
+  uri: 'wss://mighty-caverns-32856.herokuapp.com/graphql',
   options: {
     reconnect: true
   }

@@ -61,18 +61,19 @@ function PostForm() {
     <>
       <Form onSubmit={onSubmit}>
         <Form.Field>
-          <Form.TextArea
-            placeholder="Hi World!"
+          <Form.Input
+            placeholder="Say Something . . ."
             name="body"
             onChange={onChange}
             value={values.body}
             error={error ? true : false}
+            width="15"
           />
           <input
+            style={{width:"20rem",border:"none"}}
             type="file"
             ref={uploadFileRef}
             onChange={handleFileChange} />
-
           <Button type="submit" color="teal">
             Submit
           </Button>

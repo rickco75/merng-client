@@ -70,3 +70,16 @@ export const DELETE_POST_SUBSCRIPTION = gql`
     }
   }
 `
+
+export const LIKE_POST_SUBSCRIPTION = gql`
+  subscription OnLike{
+    newLike{
+      id
+      likes {
+        id
+        username
+      }
+      likeCount
+    }
+  }
+`

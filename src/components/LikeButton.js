@@ -4,8 +4,6 @@ import { useMutation, gql } from '@apollo/client'
 import { Icon, Label, Button } from 'semantic-ui-react'
 import MyPopup from '../util/MyPopup'
 
-//import gql from 'graphql-tag'
-
 function LikeButton({ user, post: { id, likeCount, likes } }) {
 
   const [liked, setLiked] = useState(false)
@@ -15,6 +13,7 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
       setLiked(true)
     }
     else setLiked(false)
+
   }, [user, likes])
 
   const [likePost] = useMutation(LIKE_POST_MUTATION, {

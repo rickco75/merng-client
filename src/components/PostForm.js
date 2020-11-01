@@ -40,11 +40,11 @@ function PostForm() {
 
       const newData = { ...data }
       newData.getPosts = [result.data.createPost, ...data.getPosts]
-      proxy.writeQuery({
-        query: FETCH_POSTS_QUERY, data: {
-          getPosts: [result.data.createPost, ...newData.getPosts]
-        }
-      })
+      // proxy.writeQuery({
+      //   query: FETCH_POSTS_QUERY, data: {
+      //     getPosts: [result.data.createPost, ...newData.getPosts]
+      //   }
+      // })
       values.body = ''
       uploadFileRef.current.value = null
     },
@@ -60,7 +60,6 @@ function PostForm() {
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <h2>Create a post: </h2>
         <Form.Field>
           <Form.TextArea
             placeholder="Hi World!"
@@ -73,8 +72,6 @@ function PostForm() {
             type="file"
             ref={uploadFileRef}
             onChange={handleFileChange} />
-
-          <p id="uploadMessage"></p>
 
           <Button type="submit" color="teal">
             Submit

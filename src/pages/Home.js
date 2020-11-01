@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useCallback } from 'react'
 import { useQuery, useSubscription } from '@apollo/client'
 
 import { Grid, Transition, Image } from 'semantic-ui-react'
@@ -15,44 +15,42 @@ function Home(props) {
   useSubscription(POST_SUBSCRIPTION)
   useSubscription(DELETE_POST_SUBSCRIPTION)
 
-
   const { user } = useContext(AuthContext)
 
   function deletePostCallback() {
     props.history.push('/')
   }
 
-  const subscribeToNewPosts = () =>{
+  const subscribeToNewPosts = useCallback(() =>{
     subscribeToMore({
       document: POST_SUBSCRIPTION,
       updateQuery: (prev, {subscriptionData}) => {
         if (!subscriptionData.data) return prev
         const newFeedItem = subscriptionData.data.newPost
-        console.log("newFeedItem ", newFeedItem)
         return Object.assign( {}, prev, {
           getPosts: [newFeedItem, ...prev.getPosts]
         })
       }
     })
-  } 
+  }, [subscribeToMore] )
 
-  const subscribeToDeletedPosts = () => {
+  const subscribeToDeletedPosts = useCallback(() => {
     subscribeToMore({
       document: DELETE_POST_SUBSCRIPTION,
       updateQuery: (prev, {subscriptionData}) => {
         if (!subscriptionData.data) return prev
-        const newFeedItems = subscriptionData.data.deletePostSub
-        // console.log("newFeedItems ", newFeedItems)
+        const newFeedItem = subscriptionData.data.deletePostSub
+        const newPosts = [...prev.getPosts].filter(post => post.id !== newFeedItem.id)
         return Object.assign( {}, prev, {
-          getPosts: newFeedItems
+          getPosts: [...newPosts, ...prev.getPosts]
         })
       }
     })    
-  }
+  },[subscribeToMore])
   
   useEffect(()=>{
     subscribeToNewPosts()
-  },[])
+  },[subscribeToNewPosts])
   
   return (
     <Grid columns={1}>

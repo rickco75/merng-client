@@ -12,6 +12,9 @@ function PostCard({ subscribeToDeletedPosts, callback, post: { body, createdAt, 
 
   const { user } = useContext(AuthContext)
 
+  const openImageNewWindow = url => {
+    window.open(url, "_blank")
+  }
   const avatarPopupMessage = `${username} has been a member since ${moment(createdAt).format("MMM yyyy")}`
 
   return (
@@ -33,9 +36,12 @@ function PostCard({ subscribeToDeletedPosts, callback, post: { body, createdAt, 
         </Card.Description>
         {url &&
           <Card.Description>
-            <Image 
-              src={url}
-              size="small" />
+            <MyPopup
+              content="Click to view original image!">
+              <Image onClick={() => openImageNewWindow(url)}
+                src={url}
+                size="small" />
+            </MyPopup>
           </Card.Description>
         }
       </Card.Content>

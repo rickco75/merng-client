@@ -51,7 +51,7 @@ function DeleteButton({ subscribeToDeletedPosts, postId, commentId, callback }) 
 
   return (
     <>
-      <MyPopup
+      <MyPopup 
         content={commentId ? "Delete Comment!" : "Delete Post!"}>
         <Button floated="right" as="div" color="red" onClick={() => setConfirmOpen(true)}>
           <Icon name="trash" style={{ margin: 0 }} />
@@ -62,6 +62,7 @@ function DeleteButton({ subscribeToDeletedPosts, postId, commentId, callback }) 
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}
         onConfirm={deletePostOrMutation}
+        size="mini"
       />
     </>
   )

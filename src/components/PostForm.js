@@ -49,7 +49,7 @@ function PostForm() {
       uploadFileRef.current.value = null
     },
     onError(err) {
-      console.log(err.graphQLErrors[0].extensions.exception.errors)
+      //console.log(err.graphQLErrors[0].extensions.exception.errors)
     }
   })
 

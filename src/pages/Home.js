@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from 'react'
 import { useQuery, useSubscription } from '@apollo/client'
 
-import { Grid, Transition } from 'semantic-ui-react'
+import { Grid, Transition, Image } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
 import { FETCH_POSTS_QUERY, POST_SUBSCRIPTION, DELETE_POST_SUBSCRIPTION } from '../util/graphql'
+import logo from '../logo-cropped.jpg'
 
 function Home(props) {
 
@@ -56,7 +57,7 @@ function Home(props) {
   return (
     <Grid columns={1}>
       <Grid.Row className="page-title ">
-        <h1 className="homeHeader">Recent Posts</h1>
+        <Image src={logo} />
       </Grid.Row>
       <Grid.Row>
         {user && (

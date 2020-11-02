@@ -51,6 +51,18 @@ const cacheOptions = {
         likes: {
           merge: false
         },
+        body: {
+          merge: false
+        },
+        url: {
+          merge: false
+        },
+        username: {
+          merge: false
+        },
+        createdAt: {
+          merge: false
+        },        
         getPosts:{
           merge: false
         }

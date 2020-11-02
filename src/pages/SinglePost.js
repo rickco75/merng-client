@@ -66,13 +66,18 @@ function SinglePost(props) {
   if (loading) {
     postMarkup = <p>Loading post...</p>
   } else if (!data) {
-      postMarkup = <p>There was an error loading your post!</p>
+    postMarkup = <p>There was an error loading your post!</p>
   } else {
     const { id, body, createdAt, username, comments, likes, likeCount, commentCount, url } = data.getPost
 
     function deletePostCallback() {
       props.history.push('/')
     }
+
+    const openImageNewWindow = url => {
+      window.open(url, "_blank")
+    }
+
     postMarkup = (
       <Grid>
         <Grid.Row>
@@ -91,9 +96,12 @@ function SinglePost(props) {
                 <Card.Description>{body}</Card.Description>
                 {url &&
                   <Card.Description>
-                    <Image
-                      src={url}
-                      size="medium" />
+                    <MyPopup
+                      content="Click to view original image!">
+                      <Image onClick={() => openImageNewWindow(url)}
+                        src={url}
+                        size="big" />
+                    </MyPopup>
                   </Card.Description>
                 }
               </Card.Content>

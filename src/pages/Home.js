@@ -55,7 +55,7 @@ function Home(props) {
   return (
     <Grid columns={1}>
       <Grid.Row className="page-title ">
-        <Image src={logo} className="logo" />
+        <Image src={logo} className="logo" centered />
       </Grid.Row>
       <Grid.Row>
         {user && (

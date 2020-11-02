@@ -18,7 +18,7 @@ function MenuBar() {
   const menuBar = user ? (
     <Menu inverted className="stickyHeader" pointing secondary size="small" color="grey">
       <Menu.Item
-        name={user.username}
+        name={user.username.toLowerCase()}
         active
         as={Link}
         to="/"

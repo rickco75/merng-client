@@ -44,6 +44,7 @@ function SinglePost(props) {
 
   useSubscription(COMMENT_SUBSCRIPTION)
   useSubscription(DELETE_COMMENT_SUBSCRIPTION)
+  // useSubscription(DELETE_POST_SUBSCRIPTION)
 
   const { subscribeToMore, loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: {
@@ -53,6 +54,20 @@ function SinglePost(props) {
       console.log(err)
     }
   })
+
+  // const subscribeToDeletedPosts = useCallback(() => {
+  //   subscribeToMore({
+  //     document: DELETE_POST_SUBSCRIPTION,
+  //     updateQuery: (prev, {subscriptionData}) => {
+  //       if (!subscriptionData.data) return prev
+  //       const newFeedItem = subscriptionData.data.deletePostSub
+  //       const newPosts = [...prev.getPosts].filter(post => post.id !== newFeedItem.id)
+  //       return Object.assign( {}, prev, {
+  //         getPosts: [...newPosts, ...prev.getPosts]
+  //       })
+  //     }
+  //   })    
+  // },[subscribeToMore])
 
   const subscribeToNewComments = useCallback(() => {
     subscribeToMore({
@@ -68,10 +83,8 @@ function SinglePost(props) {
   }, [subscribeToMore])
 
   useEffect(()=>{
-    let unsubscribe = subscribeToNewComments()
-
-    if (unsubscribe) return () => unsubscribe()
-
+    subscribeToNewComments()
+    // subscribeToDeletedPosts()
   }, [subscribeToNewComments])
 
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {

@@ -50,6 +50,9 @@ const cacheOptions = {
         },
         likes: {
           merge: false
+        },
+        getPosts:{
+          merge: false
         }
       }
     }

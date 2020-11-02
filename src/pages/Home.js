@@ -11,7 +11,7 @@ import logo from '../logo-cropped.jpg'
 function Home(props) {
 
   const { subscribeToMore, loading, data, refetch } = useQuery(FETCH_POSTS_QUERY);
-  
+
   useSubscription(POST_SUBSCRIPTION)
   useSubscription(DELETE_POST_SUBSCRIPTION)
 
@@ -21,18 +21,18 @@ function Home(props) {
     props.history.push('/')
   }
 
-  const subscribeToNewPosts = useCallback(() =>{
+  const subscribeToNewPosts = useCallback(() => {
     subscribeToMore({
       document: POST_SUBSCRIPTION,
-      updateQuery: (prev, {subscriptionData}) => {
+      updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev
         const newFeedItem = subscriptionData.data.newPost
-        return Object.assign( {}, prev, {
+        return Object.assign({}, prev, {
           getPosts: [newFeedItem, ...prev.getPosts]
         })
       }
     })
-  }, [subscribeToMore] )
+  }, [subscribeToMore])
 
   const subscribeToDeletedPosts = useCallback(() => {
     subscribeToMore({
@@ -47,11 +47,14 @@ function Home(props) {
       }
     })    
   },[subscribeToMore])
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     subscribeToNewPosts()
-  },[subscribeToNewPosts])
-  
+    subscribeToDeletedPosts()
+  }, [subscribeToNewPosts, subscribeToDeletedPosts])
+
+
+
   return (
     <Grid columns={1}>
       <Grid.Row className="page-title ">
@@ -71,16 +74,16 @@ function Home(props) {
             <Transition.Group>
               {
                 data.getPosts && data.getPosts.map(post => (
-                  <Grid.Column 
-                      key={post.id} 
-                      style={{ marginBottom: 20 }}
-                      >
-                    <PostCard 
-                      callback={deletePostCallback} 
-                      subscribeToDeletedPosts={subscribeToDeletedPosts}
-                      post={post} 
-                      refetch={refetch}                       
-                      />
+                  <Grid.Column
+                    key={post.id}
+                    style={{ marginBottom: 20 }}
+                  >
+                    <PostCard
+                      callback={deletePostCallback}
+                      // subscribeToDeletedPosts={subscribeToDeletedPosts}
+                      post={post}
+                      refetch={refetch}
+                    />
                   </Grid.Column>
                 ))
               }

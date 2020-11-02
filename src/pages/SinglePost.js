@@ -1,12 +1,14 @@
-import React, { useContext, useState, useRef } from 'react'
-//import gql from 'graphql-tag'
-import { useQuery, useMutation, gql } from '@apollo/client'
+import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
+
+import { useQuery, useMutation, useSubscription, gql } from '@apollo/client'
 import { Button, Card, Grid, Image, Label, Icon, Form } from 'semantic-ui-react'
+
 import moment from 'moment'
 import LikeButton from '../components/LikeButton'
 import { AuthContext } from '../context/auth'
 import DeleteButton from '../components/DeleteButton'
 import MyPopup from '../util/MyPopup'
+import { COMMENT_SUBSCRIPTION, DELETE_COMMENT_SUBSCRIPTION } from '../util/graphql'
 
 const FETCH_POST_QUERY = gql`
   query($postId:ID!){
@@ -40,7 +42,10 @@ function SinglePost(props) {
 
   const [comment, setComment] = useState('')
 
-  const { loading, data } = useQuery(FETCH_POST_QUERY, {
+  useSubscription(COMMENT_SUBSCRIPTION)
+  useSubscription(DELETE_COMMENT_SUBSCRIPTION)
+
+  const { subscribeToMore, loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId
     },
@@ -48,6 +53,26 @@ function SinglePost(props) {
       console.log(err)
     }
   })
+
+  const subscribeToNewComments = useCallback(() => {
+    subscribeToMore({
+      document: COMMENT_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev
+        const newFeedItem = subscriptionData.data.newComment
+        return Object.assign({}, prev, {
+          getPost: newFeedItem
+        })
+      },      
+    })
+  }, [subscribeToMore])
+
+  useEffect(()=>{
+    let unsubscribe = subscribeToNewComments()
+
+    if (unsubscribe) return () => unsubscribe()
+
+  }, [subscribeToNewComments])
 
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
     update() {
@@ -59,7 +84,6 @@ function SinglePost(props) {
       body: comment
     }
   })
-
 
   let postMarkup
 

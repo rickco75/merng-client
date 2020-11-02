@@ -4,7 +4,7 @@ import App from './App'
 
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 import { setContext } from 'apollo-link-context'
-import { createUploadLink} from 'apollo-upload-client'
+import { createUploadLink } from 'apollo-upload-client'
 import { WebSocketLink } from 'apollo-link-ws'
 import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
@@ -23,7 +23,7 @@ const wsLink = new WebSocketLink({
 })
 
 
-const authLink = setContext(()=>{
+const authLink = setContext(() => {
   const token = localStorage.getItem("jwtToken")
   return {
     headers: {
@@ -41,8 +41,23 @@ const link = split(
   authLink.concat(uploadLink)
 )
 
+const cacheOptions = {
+  typePolicies: {
+    Post: {
+      fields: {
+        comments: {
+          merge: false
+        },
+        likes: {
+          merge: false
+        }
+      }
+    }
+  }
+}
+
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache(cacheOptions),
   link
 })
 

@@ -8,14 +8,16 @@ import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
 import MyPopup from '../util/MyPopup'
 
-function PostCard({ subscribeToDeletedPosts, callback, post: { body, createdAt, id, username, likeCount, commentCount, likes, url } }) {
+function PostCard({ callback, post: { body, createdAt, id, username, userCreated, likeCount, commentCount, likes, url } }) {
 
   const { user } = useContext(AuthContext)
-
+  
   const openImageNewWindow = url => {
     window.open(url, "_blank")
   }
-  const avatarPopupMessage = `${username} has been a member since ${moment(createdAt).format("MMM yyyy")}`
+
+  const uc =  userCreated ? moment(userCreated).format("MMM yyyy") : 'not available'
+  const avatarPopupMessage = `${username} has been a member since ${uc}`
 
   return (
     <Card fluid>
@@ -58,7 +60,7 @@ function PostCard({ subscribeToDeletedPosts, callback, post: { body, createdAt, 
             </Label>
           </Button>
         </MyPopup>
-        {user && user.username === username && <DeleteButton subscribeToDeletedPosts={subscribeToDeletedPosts} callback={callback} postId={id} />}
+        {user && user.username === username && <DeleteButton callback={callback} postId={id} />}
       </Card.Content>
     </Card>
   )

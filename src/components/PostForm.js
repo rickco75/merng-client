@@ -49,6 +49,7 @@ function PostForm() {
       uploadFileRef.current.value = null
     },
     onError(err) {
+      console.log(err)
       //console.log(err.graphQLErrors[0].extensions.exception.errors)
     }
   })
@@ -108,6 +109,7 @@ const CREATE_POST_MUTATION = gql`
       body
       createdAt
       username
+      userCreated
       likes {
         id
         username

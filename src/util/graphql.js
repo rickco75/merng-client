@@ -9,6 +9,7 @@ export const FETCH_POSTS_QUERY = gql`
     body 
     createdAt 
     username 
+    userCreated
     likeCount
     likes {
       username
@@ -23,6 +24,50 @@ export const FETCH_POSTS_QUERY = gql`
     url
   }
 }
+`
+export const COMMENT_SUBSCRIPTION = gql`
+  subscription onCommentAdded{
+    newComment {
+      id
+      body
+      username
+      commentCount
+      comments{
+        id
+        createdAt
+        body
+        username
+      }
+      likeCount
+      likes{
+        id
+        username
+        createdAt
+      }      
+    }
+  }
+`
+export const DELETE_COMMENT_SUBSCRIPTION = gql`
+  subscription onCommentDeleted{
+    onDeleteComment{
+      id
+      body
+      username
+      commentCount
+      comments{
+        id
+        createdAt
+        body
+        username
+      }
+      likeCount
+      likes{
+        id
+        username
+        createdAt
+      }      
+    }
+  }
 `
 
 export const POST_SUBSCRIPTION = gql`

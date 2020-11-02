@@ -1,45 +1,36 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button, Icon, Confirm } from 'semantic-ui-react'
 import { useMutation, gql } from '@apollo/client'
-//import gql from 'graphql-tag'
-// import { FETCH_POSTS_QUERY } from '../util/graphql'
+import { FETCH_POSTS_QUERY } from '../util/graphql'
 import MyPopup from '../util/MyPopup'
 
-function DeleteButton({ subscribeToDeletedPosts, postId, commentId, callback }) {
+function DeleteButton({ postId, commentId, callback }) {
 
   const [confirmOpen, setConfirmOpen] = useState(false)
-
-  useEffect(()=> {
-    if (subscribeToDeletedPosts) {
-      subscribeToDeletedPosts()
-    }
-  },[subscribeToDeletedPosts])
-
   
   const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
 
   const [deletePostOrMutation] = useMutation(mutation, {
     update(proxy) {
       setConfirmOpen(false)
-      // subscribeToNewPosts()
-      // if (!commentId) {
-      //   const data = proxy.readQuery({
-      //     query: FETCH_POSTS_QUERY
-      //   })
-      //   const newData = {...data}
-      //   newData.getPosts = newData.getPosts.filter(p => p.id !== postId)   
+      if (!commentId) {
+        const data = proxy.readQuery({
+          query: FETCH_POSTS_QUERY
+        })
+        const newData = {...data}
+        newData.getPosts = newData.getPosts.filter(p => p.id !== postId)   
 
-      //   // Necessary to avoid errors updating the cache     
-      //   proxy.evict({          
-      //     fieldName: "getPosts",
-      //     broadcast: false
-      //   })
-      //   proxy.writeQuery({ 
-      //       query: FETCH_POSTS_QUERY, data: {
-      //         getPosts: [...newData.getPosts]
-      //       } 
-      //   })
-      // }
+        // Necessary to avoid errors updating the cache for delete post    
+        proxy.evict({          
+          fieldName: "getPosts",
+          broadcast: false
+        })
+        proxy.writeQuery({ 
+            query: FETCH_POSTS_QUERY, data: {
+              getPosts: [...newData.getPosts]
+            } 
+        })
+      }
 
       if (callback) callback()
     },

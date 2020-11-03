@@ -75,7 +75,7 @@ function PostForm() {
           </Button>
           <input
             title=" "
-            style={{ border: "none" }}
+            style={{ width: "25rem", border: "none" }}
             type="file"          
             ref={uploadFileRef}
             onChange={handleFileChange} />

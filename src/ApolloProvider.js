@@ -9,14 +9,16 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 
+
+console.log('currently running on: ', process.env.NODE_ENV, ' server')
+const uploadUri = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/graphql/' : 'https://mighty-caverns-32856.herokuapp.com/graphql/'
 const uploadLink = createUploadLink({
-  uri: 'https://mighty-caverns-32856.herokuapp.com/graphql/'
-  // uri: 'http://localhost:5000/graphql/',
+  uri: uploadUri
 })
 
+const wsUri = process.env.NODE_ENV === 'development' ? 'ws://localhost:5000/graphql' : 'wss://mighty-caverns-32856.herokuapp.com/graphql'
 const wsLink = new WebSocketLink({
-  // uri: 'ws://localhost:5000/graphql',
-  uri: 'wss://mighty-caverns-32856.herokuapp.com/graphql',
+  uri: wsUri,
   options: {
     reconnect: true
   }
@@ -43,6 +45,13 @@ const link = split(
 
 const cacheOptions = {
   typePolicies: {
+    Query: {
+      fields: {
+        getPosts:{
+          merge: false
+        }
+      }
+    },
     Post: {
       fields: {
         comments: {

@@ -118,7 +118,7 @@ function SinglePost(props) {
                       onClose={() => setOpenImage(false)}
                       onOpen={() => setOpenImage(true)}
                       open={openImage}
-                      trigger={<img style={{ cursor:'pointer',maxWidth:'100%' }}
+                      trigger={<img style={{ cursor:'pointer',maxWidth:'55%' }}
                         src={url} title="Click to View!" alt="Click to view!" />}
                     >
                       <Modal.Content image>

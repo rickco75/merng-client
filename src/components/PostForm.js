@@ -60,7 +60,7 @@ function PostForm() {
 
   return (
     <div>
-      <Form onSubmit={onSubmit} style={{marginBottom:5}}>
+      <Form onSubmit={onSubmit} style={{marginBottom:5, marginLeft:8}}>
         <Form.Field>
           <Form.Input
             placeholder="Say Something . . ."
@@ -75,7 +75,7 @@ function PostForm() {
           </Button>
           <input
             title=" "
-            style={{ lineHeight: '1rem', height: '2rem', width: "15rem", border: "none" }}
+            style={{ width: "15rem", border: "none" }}
             type="file"          
             ref={uploadFileRef}
             onChange={handleFileChange} />

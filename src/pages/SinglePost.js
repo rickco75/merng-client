@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
 
 import { useQuery, useMutation, useSubscription, gql } from '@apollo/client'
-import { Button, Card, Grid, Image, Label, Icon, Form } from 'semantic-ui-react'
+import { Button, Card, Grid, Image, Label, Icon, Form, Modal } from 'semantic-ui-react'
 
 import moment from 'moment'
 import LikeButton from '../components/LikeButton'
@@ -41,10 +41,10 @@ function SinglePost(props) {
   const postId = props.match.params.postId
 
   const [comment, setComment] = useState('')
+  const [openImage, setOpenImage] = useState(false)
 
   useSubscription(COMMENT_SUBSCRIPTION)
   useSubscription(DELETE_COMMENT_SUBSCRIPTION)
-  // useSubscription(DELETE_POST_SUBSCRIPTION)
 
   const { subscribeToMore, loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: {
@@ -55,20 +55,6 @@ function SinglePost(props) {
     }
   })
 
-  // const subscribeToDeletedPosts = useCallback(() => {
-  //   subscribeToMore({
-  //     document: DELETE_POST_SUBSCRIPTION,
-  //     updateQuery: (prev, {subscriptionData}) => {
-  //       if (!subscriptionData.data) return prev
-  //       const newFeedItem = subscriptionData.data.deletePostSub
-  //       const newPosts = [...prev.getPosts].filter(post => post.id !== newFeedItem.id)
-  //       return Object.assign( {}, prev, {
-  //         getPosts: [...newPosts, ...prev.getPosts]
-  //       })
-  //     }
-  //   })    
-  // },[subscribeToMore])
-
   const subscribeToNewComments = useCallback(() => {
     subscribeToMore({
       document: COMMENT_SUBSCRIPTION,
@@ -78,13 +64,12 @@ function SinglePost(props) {
         return Object.assign({}, prev, {
           getPost: newFeedItem
         })
-      },      
+      },
     })
   }, [subscribeToMore])
 
-  useEffect(()=>{
+  useEffect(() => {
     subscribeToNewComments()
-    // subscribeToDeletedPosts()
   }, [subscribeToNewComments])
 
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
@@ -111,10 +96,6 @@ function SinglePost(props) {
       props.history.push('/')
     }
 
-    const openImageNewWindow = url => {
-      window.open(url, "_blank")
-    }
-
     postMarkup = (
       <Grid>
         <Grid.Row>
@@ -131,15 +112,26 @@ function SinglePost(props) {
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
                 <Card.Description>{body}</Card.Description>
-                {url &&
+                {url && (
                   <Card.Description>
-                    <MyPopup
-                      content="Click to view original image!">
-                      <Image onClick={() => openImageNewWindow(url)}
-                        src={url}
-                        size="big" />
-                    </MyPopup>
+                    <Modal
+                      onClose={() => setOpenImage(false)}
+                      onOpen={() => setOpenImage(true)}
+                      open={openImage}
+                      trigger={<img style={{ cursor:'pointer',maxWidth:'100%' }}
+                        src={url} title="Click to View!" alt="Click to view!" />}
+                    >
+                      <Modal.Content image>
+                        <Image size='huge' src={url} wrapped />
+                      </Modal.Content>
+                      <Modal.Actions>
+                        <Button onClick={() => setOpenImage(false)} positive>
+                          Ok
+                        </Button>
+                      </Modal.Actions>
+                    </Modal>
                   </Card.Description>
+                )
                 }
               </Card.Content>
               <hr />

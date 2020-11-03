@@ -18,7 +18,7 @@ function MenuBar() {
   const menuBar = user ? (
     <Menu inverted className="stickyHeader" pointing secondary size="small" color="grey">
       <Menu.Item
-        name={user.username.toLowerCase()}
+        name="home"
         active
         as={Link}
         to="/"
@@ -27,7 +27,10 @@ function MenuBar() {
         <Menu.Item
           name='logout'
           onClick={logout}
-        />        
+        /> 
+        <Menu.Item
+          name='profile'          
+        />                   
       </Menu.Menu>
     </Menu>
   ) : (

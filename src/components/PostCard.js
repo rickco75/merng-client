@@ -11,16 +11,12 @@ import MyPopup from '../util/MyPopup'
 function PostCard({ callback, post: { body, createdAt, id, username, userCreated, likeCount, commentCount, likes, url } }) {
 
   const { user } = useContext(AuthContext)
-  
-  const openImageNewWindow = url => {
-    window.open(url, "_blank")
-  }
 
   const uc =  userCreated ? moment(userCreated).format("MMM yyyy") : 'not available'
   const avatarPopupMessage = `${username} has been a member since ${uc}`
 
   return (
-    <Card fluid>
+    <Card fluid raised>
       <Card.Content>
         <MyPopup
           content={avatarPopupMessage}>
@@ -39,8 +35,8 @@ function PostCard({ callback, post: { body, createdAt, id, username, userCreated
         {url &&
           <Card.Description>
             <MyPopup
-              content="Click to view original image!">
-              <Image onClick={() => openImageNewWindow(url)}
+              content="View Comments">
+              <Image as={Link}  to={`/posts/${id}`}
                 src={url}
                 size="small" />
             </MyPopup>

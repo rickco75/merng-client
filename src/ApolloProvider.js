@@ -10,7 +10,7 @@ import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 
 
-console.log('currently running on: ', process.env.NODE_ENV, ' server')
+// console.log('currently running on: ', process.env.NODE_ENV, ' server')
 const uploadUri = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/graphql/' : 'https://mighty-caverns-32856.herokuapp.com/graphql/'
 const uploadLink = createUploadLink({
   uri: uploadUri

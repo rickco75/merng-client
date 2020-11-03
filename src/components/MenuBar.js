@@ -29,7 +29,7 @@ function MenuBar() {
           onClick={logout}
         /> 
         <Menu.Item
-          name='profile'          
+          name={user.username}          
         />                   
       </Menu.Menu>
     </Menu>

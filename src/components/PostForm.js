@@ -60,7 +60,7 @@ function PostForm() {
 
   return (
     <div>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit} style={{marginBottom:5}}>
         <Form.Field>
           <Form.Input
             placeholder="Say Something . . ."

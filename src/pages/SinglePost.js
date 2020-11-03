@@ -2,6 +2,7 @@ import React, { useContext, useState, useRef, useEffect, useCallback } from 'rea
 
 import { useQuery, useMutation, useSubscription, gql } from '@apollo/client'
 import { Button, Card, Grid, Image, Label, Icon, Form, Modal } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 import moment from 'moment'
 import LikeButton from '../components/LikeButton'
@@ -52,6 +53,7 @@ function SinglePost(props) {
     },
     onError: err => {
       console.log(err)
+      props.history.push('/')
     }
   })
 
@@ -72,7 +74,7 @@ function SinglePost(props) {
     subscribeToNewComments()
   }, [subscribeToNewComments])
 
-  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
+  const [submitComment, { error }] = useMutation(SUBMIT_COMMENT_MUTATION, {
     update() {
       setComment('')
       commentInputRef.current.blur()
@@ -80,15 +82,21 @@ function SinglePost(props) {
     variables: {
       postId,
       body: comment
+    },
+    onError: (err) => {
+      console.log("error submitting comment post does not exist! ", err)
     }
   })
-
   let postMarkup
 
   if (loading) {
     postMarkup = <p>Loading post...</p>
-  } else if (!data) {
-    postMarkup = <p>There was an error loading your post!</p>
+  }
+  else if (!data || error) {
+    postMarkup = <div>
+      This post has been removed!
+        <hr />
+      <Button as={Link} to="/">Return to posts</Button></div>
   } else {
     const { id, body, createdAt, username, comments, likes, likeCount, commentCount, url } = data.getPost
 
@@ -118,7 +126,7 @@ function SinglePost(props) {
                       onClose={() => setOpenImage(false)}
                       onOpen={() => setOpenImage(true)}
                       open={openImage}
-                      trigger={<img style={{ cursor:'pointer',maxWidth:'55%' }}
+                      trigger={<img style={{ cursor: 'pointer', maxWidth: '55%' }}
                         src={url} title="Click to View!" alt="Click to view!" />}
                     >
                       <Modal.Content image>
@@ -179,6 +187,7 @@ function SinglePost(props) {
                 </Card.Content>
               </Card>
             )}
+            {error && <div>post has been removed</div>}
             {comments.map(comment => (
               <Card fluid key={comment.id}>
                 <Card.Content>

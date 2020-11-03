@@ -10,7 +10,7 @@ import logo from '../logo-cropped.jpg'
 
 function Home(props) {
 
-  const { subscribeToMore, loading, data, refetch } = useQuery(FETCH_POSTS_QUERY);
+  const { subscribeToMore, loading, data, refetch, error } = useQuery(FETCH_POSTS_QUERY);
 
   useSubscription(POST_SUBSCRIPTION)
   useSubscription(DELETE_POST_SUBSCRIPTION)
@@ -56,10 +56,9 @@ function Home(props) {
 
 
   return (
+    <>
+    {error && <div>An unexpected error has occored!</div>}
     <Grid columns={1}>
-      <Grid.Row className="page-title ">
-        <Image src={logo} className="logo" centered />
-      </Grid.Row>
       <Grid.Row>
         {user && (
           <Grid.Column width={10}>
@@ -76,11 +75,10 @@ function Home(props) {
                 data.getPosts && data.getPosts.map(post => (
                   <Grid.Column
                     key={post.id}
-                    style={{ marginBottom: 20 }}
+                    style={{ marginBottom: 10 }}
                   >
                     <PostCard
                       callback={deletePostCallback}
-                      // subscribeToDeletedPosts={subscribeToDeletedPosts}
                       post={post}
                       refetch={refetch}
                     />
@@ -91,6 +89,7 @@ function Home(props) {
           )}
       </Grid.Row>
     </Grid>
+    </>
   )
 }
 

@@ -59,7 +59,7 @@ function PostForm() {
   }
 
   return (
-    <>
+    <div>
       <Form onSubmit={onSubmit}>
         <Form.Field>
           <Form.Input
@@ -68,26 +68,29 @@ function PostForm() {
             onChange={onChange}
             value={values.body}
             error={error ? true : false}
-            width="15"
+            width="12"
           />
-          <input
-            style={{width:"20rem",border:"none"}}
-            type="file"
-            ref={uploadFileRef}
-            onChange={handleFileChange} />
-          <Button type="submit" color="teal">
+          <Button size="mini" type="submit" color="teal">
             Submit
           </Button>
+          <input
+            title=" "
+            style={{ lineHeight: '1rem', height: '2rem', width: "15rem", border: "none" }}
+            type="file"          
+            ref={uploadFileRef}
+            onChange={handleFileChange} />
         </Form.Field>
       </Form>
-      {error && (
-        <div className="ui error message" style={{ marginBottom: 20 }}>
-          <ul className="list">
-            <li>{error.graphQLErrors[0].message}</li>
-          </ul>
-        </div>
-      )}
-    </>
+      {
+        error && (
+          <div className="ui error message" style={{ marginBottom: 20 }}>
+            <ul className="list">
+              <li>{error.graphQLErrors[0].message}</li>
+            </ul>
+          </div>
+        )
+      }
+    </div>
   )
 }
 

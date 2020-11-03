@@ -13,17 +13,22 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import SinglePost from './pages/SinglePost'
+import MyAccount from './pages/MyAccount'
+import Footer from './components/Footer'
+
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Container>
+        <Container fluid>
           <MenuBar />
           <Route exact path="/" component={Home} />
           <AuthRoute exact path='/login' component={Login} />
           <AuthRoute exact path='/register' component={Register} />
+          <Route exact path='/account' component={MyAccount} />
           <Route exact path="/posts/:postId" component={SinglePost} />
+          <Footer />
         </Container>
       </Router>
     </AuthProvider>

@@ -16,7 +16,7 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
 
   }, [user, likes])
 
-  const [likePost] = useMutation(LIKE_POST_MUTATION, {
+  const [likePost, { error }] = useMutation(LIKE_POST_MUTATION, {
     variables: { postId: id },
 
     onError(err) {
@@ -40,15 +40,21 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
       </Button>
     )
   return (
-    <MyPopup
-      content={liked ? 'Unlike' : 'Like'}>
-        <Button as='div' labelPosition='right' onClick={likePost}>
-          {likeButton}
-          <Label color='teal' basic pointing='left'>
-            {likeCount}
-          </Label>
-        </Button>
-      </MyPopup>
+    <>
+      {error ? <div>This post has been removed!
+        <hr/>
+        <Button as={Link} to="/">Return to posts</Button></div> :
+        <MyPopup
+          content={liked ? 'Unlike' : 'Like'}>
+          <Button as='div' labelPosition='right' onClick={likePost}>
+            {likeButton}
+            <Label color='teal' basic pointing='left'>
+              {likeCount}
+            </Label>
+          </Button>
+        </MyPopup>
+      }
+    </>
   )
 
 }

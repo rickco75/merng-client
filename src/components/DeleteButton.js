@@ -10,7 +10,7 @@ function DeleteButton({ postId, commentId, callback }) {
   
   const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
 
-  const [deletePostOrMutation] = useMutation(mutation, {
+  const [deletePostOrMutation, {error}] = useMutation(mutation, {
     update(proxy) {
       setConfirmOpen(false)
       if (!commentId) {
@@ -34,6 +34,10 @@ function DeleteButton({ postId, commentId, callback }) {
 
       if (callback) callback()
     },
+    onError: (err)=> {
+      console.log("post id does not exist")
+      callback()
+    },
     variables: {
       postId,
       commentId
@@ -42,19 +46,23 @@ function DeleteButton({ postId, commentId, callback }) {
 
   return (
     <>
-      <MyPopup 
-        content={commentId ? "Delete Comment!" : "Delete Post!"}>
-        <Button floated="right" as="div" color="red" onClick={() => setConfirmOpen(true)}>
-          <Icon name="trash" style={{ margin: 0 }} />
-        </Button>
-      </MyPopup>
-
-      <Confirm
-        open={confirmOpen}
-        onCancel={() => setConfirmOpen(false)}
-        onConfirm={deletePostOrMutation}
-        size="mini"
-      />
+      {error ? <div>Post has been removed!</div> : (
+        <div>
+          <MyPopup 
+            content={commentId ? "Delete Comment!" : "Delete Post!"}>
+            <Button floated="right" as="div" color="red" onClick={() => setConfirmOpen(true)}>
+              <Icon name="trash" style={{ margin: 0 }} />
+            </Button>
+          </MyPopup>
+    
+          <Confirm
+            open={confirmOpen}
+            onCancel={() => setConfirmOpen(false)}
+            onConfirm={deletePostOrMutation}
+            size="mini"
+          />
+        </div>        
+      )}
     </>
   )
 }

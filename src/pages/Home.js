@@ -61,7 +61,7 @@ function Home(props) {
     <Grid columns={1}>
       <Grid.Row>
         {user && (
-          <Grid.Column width={10}>
+          <Grid.Column width={15}>
             <PostForm />
           </Grid.Column>
         )}

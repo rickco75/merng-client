@@ -18,9 +18,6 @@ function MyAccount(props) {
                 <Header as='h2' icon float="center">
                   <Icon name='settings' />
                   Account Settings
-                  <Header.Subheader>
-                      Manage your account settings
-                  </Header.Subheader>
                 </Header>
               </Grid.Column>
             </Grid.Row>

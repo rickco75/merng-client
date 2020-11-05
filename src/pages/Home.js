@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useCallback } from 'react'
 import { useQuery, useSubscription } from '@apollo/client'
 
-import { Grid, Transition, Image } from 'semantic-ui-react'
+import { Grid, Transition } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
 import { FETCH_POSTS_QUERY, POST_SUBSCRIPTION, DELETE_POST_SUBSCRIPTION } from '../util/graphql'
-import logo from '../logo-cropped.jpg'
 
 function Home(props) {
 

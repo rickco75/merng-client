@@ -44,9 +44,6 @@ function SinglePost(props) {
   const [comment, setComment] = useState('')
   const [openImage, setOpenImage] = useState(false)
 
-  useSubscription(COMMENT_SUBSCRIPTION)
-  useSubscription(DELETE_COMMENT_SUBSCRIPTION)
-
   const { subscribeToMore, loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId
@@ -56,6 +53,9 @@ function SinglePost(props) {
       props.history.push('/')
     }
   })
+
+  useSubscription(COMMENT_SUBSCRIPTION)
+  useSubscription(DELETE_COMMENT_SUBSCRIPTION)
 
   const subscribeToNewComments = useCallback(() => {
     subscribeToMore({
@@ -87,6 +87,8 @@ function SinglePost(props) {
       console.log("error submitting comment post does not exist! ", err)
     }
   })
+
+
   let postMarkup
 
   if (loading) {
@@ -105,20 +107,14 @@ function SinglePost(props) {
     }
 
     postMarkup = (
-      <Grid>
-        <Grid.Row>
-          <Grid.Column width={2}>
-            <Image
-              src='https://react.semantic-ui.com/images/avatar/large/molly.png'
-              size="small"
-              float="right"
-            />
-          </Grid.Column>
-          <Grid.Column width={10}>
+      <Grid centered container>
+        <Grid.Row centered>
+          <Grid.Column width={16}>
             <Card fluid>
               <Card.Content>
                 <Card.Header>{username}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
+                <Card.Meta>{commentCount} comment(s)</Card.Meta>
                 <Card.Description>{body}</Card.Description>
                 {url && (
                   <Card.Description>
@@ -126,7 +122,7 @@ function SinglePost(props) {
                       onClose={() => setOpenImage(false)}
                       onOpen={() => setOpenImage(true)}
                       open={openImage}
-                      trigger={<img style={{ cursor: 'pointer', maxWidth: '55%' }}
+                      trigger={<img style={{ cursor: 'pointer', maxWidth: '60%' }}
                         src={url} title="Click to View!" alt="Click to view!" />}
                     >
                       <Modal.Content image>
@@ -144,20 +140,17 @@ function SinglePost(props) {
               </Card.Content>
               <hr />
               <Card.Content extra>
-                <LikeButton user={user} post={{ id, likeCount, likes }} />
                 <MyPopup
-                  content="Total Comments" >
+                  content="Go Back To Posts" >
                   <Button
                     as="div"
                     labelPosition="right">
-                    <Button basic color="blue">
-                      <Icon name="comments" />
+                    <Button basic color="blue" as={Link} to="/">
+                      <Icon name="arrow left" />
                     </Button>
-                    <Label basic color="blue" pointing="left">
-                      {commentCount}
-                    </Label>
                   </Button>
                 </MyPopup>
+                <LikeButton user={user} post={{ id, likeCount, likes }} />
 
                 {user && user.username === username && <DeleteButton callback={deletePostCallback} postId={id} />}
               </Card.Content>

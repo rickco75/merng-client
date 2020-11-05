@@ -44,10 +44,11 @@ function DeleteButton({ postId, commentId, callback }) {
     }
   })
 
+
   return (
     <>
       {error ? <div>Post has been removed!</div> : (
-        <div>
+        <div style={{display:'inline'}}>
           <MyPopup 
             content={commentId ? "Delete Comment!" : "Delete Post!"}>
             <Button floated="right" as="div" color="red" onClick={() => setConfirmOpen(true)}>

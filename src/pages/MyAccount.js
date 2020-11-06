@@ -4,7 +4,7 @@ import { Grid, Card, Image, Icon, Header } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
 import { Redirect } from 'react-router-dom'
 import moment from 'moment'
-
+import imageCompression from 'browser-image-compression';
 
 function MyAccount(props) {
 
@@ -36,11 +36,34 @@ function MyAccount(props) {
     }
   })
 
-  const uploadPic = () => {
-    const file = fileRef.current.files[0]
+  const uploadPic = (file) => {
+    //const file = fileRef.current.files[0]
     if (!file) return
     setLoading(true)
     uploadFile({ variables: { file } })
+  }
+
+  async function handleImageUpload(event) {
+ 
+    const imageFile = fileRef.current.files[0];
+    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+   
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true
+    }
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+   
+      uploadPic(compressedFile); // write your own logic
+    } catch (error) {
+      console.log(error);
+    }
+   
   }
 
   const profilePic = !fileUri || fileUri === '' ? 'https://react.semantic-ui.com/images/avatar/large/molly.png' : fileUri
@@ -61,8 +84,8 @@ function MyAccount(props) {
             <Grid.Row>
               <Grid.Column width={12}>
                 <Card fluid raised centered>
-                  {loading ? <span style={{textAlign:'center'}}><Icon size="huge" loading name="spinner" /></span> :
-                    <span style={{textAlign:'center'}}>
+                  {loading ? <span style={{ textAlign: 'center' }}><Icon size="huge" loading name="spinner" /></span> :
+                    <span style={{ textAlign: 'center' }}>
                       <Image centered
                         src={profilePic}
                         size="medium"
@@ -70,7 +93,7 @@ function MyAccount(props) {
                         alt="File was not found!"
                       />
                       <span style={{ textAlign: 'center' }}>
-                        <input type="file" ref={fileRef} id="profilePic" style={{ border: '1px inset', lineHeight: '14px' }} onChange={uploadPic} />
+                        <input type="file" ref={fileRef} id="profilePic" style={{ border: '1px inset', lineHeight: '14px' }} onChange={handleImageUpload} />
                       </span></span>}
                   <Card.Content centered="true">
                     <Card.Header>{user.username} </Card.Header>

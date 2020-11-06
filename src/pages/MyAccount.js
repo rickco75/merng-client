@@ -12,8 +12,8 @@ function MyAccount(props) {
 
   let userProfilePic = ''
 
-  if (user){
-    if (localStorage.getItem("profilePic")){
+  if (user) {
+    if (localStorage.getItem("profilePic")) {
       userProfilePic = localStorage.getItem("profilePic")
     } else {
       userProfilePic = user.profilePic
@@ -21,14 +21,16 @@ function MyAccount(props) {
 
   }
 
-  const [fileUri,setFileUri] = useState(userProfilePic)
-  
+  const [fileUri, setFileUri] = useState(userProfilePic)
+  const [loading, setLoading] = useState(false)
+
   const fileRef = useRef('')
 
   const [uploadFile] = useMutation(UPLOAD_FILE, {
     onCompleted: data => {
       console.log(data)
       setFileUri(data.uploadProfilePic.url)
+      setLoading(false)
       localStorage.setItem("profilePic", data.uploadProfilePic.url)
       fileRef.current.value = ''
     }
@@ -37,6 +39,7 @@ function MyAccount(props) {
   const uploadPic = () => {
     const file = fileRef.current.files[0]
     if (!file) return
+    setLoading(true)
     uploadFile({ variables: { file } })
   }
 
@@ -57,16 +60,18 @@ function MyAccount(props) {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column width={12}>
-                <Card fluid raised>
-                  <Image centered
-                    src={profilePic}
-                    size="medium"
-                    float="right"
-                    alt="File was not found!"
-                  />
-                  <span style={{ textAlign: 'center' }}>
-                    <input type="file" ref={fileRef} id="profilePic" style={{border:'1px inset',lineHeight:'14px'}} onChange={uploadPic} />
-                  </span>
+                <Card fluid raised centered>
+                  {loading ? <span style={{textAlign:'center'}}><Icon size="huge" loading name="spinner" /></span> :
+                    <span style={{textAlign:'center'}}>
+                      <Image centered
+                        src={profilePic}
+                        size="medium"
+                        float="right"
+                        alt="File was not found!"
+                      />
+                      <span style={{ textAlign: 'center' }}>
+                        <input type="file" ref={fileRef} id="profilePic" style={{ border: '1px inset', lineHeight: '14px' }} onChange={uploadPic} />
+                      </span></span>}
                   <Card.Content centered="true">
                     <Card.Header>{user.username} </Card.Header>
                     <Card.Meta>Member since {moment(user.createdAt).format('MMM DD, YYYY')}</Card.Meta>

@@ -36,16 +36,16 @@ function Home(props) {
   const subscribeToDeletedPosts = useCallback(() => {
     subscribeToMore({
       document: DELETE_POST_SUBSCRIPTION,
-      updateQuery: (prev, {subscriptionData}) => {
+      updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev
         const newFeedItem = subscriptionData.data.deletePostSub
         const newPosts = [...prev.getPosts].filter(post => post.id !== newFeedItem.id)
-        return Object.assign( {}, prev, {
+        return Object.assign({}, prev, {
           getPosts: [...newPosts, ...prev.getPosts]
         })
       }
-    })    
-  },[subscribeToMore])
+    })
+  }, [subscribeToMore])
 
   useEffect(() => {
     subscribeToNewPosts()
@@ -56,38 +56,38 @@ function Home(props) {
 
   return (
     <>
-    {error && <div>An unexpected error has occored!</div>}
-    <Grid columns={1}>
-      <Grid.Row>
-        {user && (
-          <Grid.Column width={15}>
-            <PostForm />
-          </Grid.Column>
-        )}
-      </Grid.Row>
-      <Grid.Row>
-        {loading ? (
-          <h1>Loading posts...</h1>
-        ) : (
-            <Transition.Group>
-              {
-                data.getPosts && data.getPosts.map(post => (
-                  <Grid.Column
-                    key={post.id}
-                    style={{ marginBottom: 10, marginLeft: 10, marginRight: 10 }}
-                  >
-                    <PostCard
-                      callback={deletePostCallback}
-                      post={post}
-                      refetch={refetch}
-                    />
-                  </Grid.Column>
-                ))
-              }
-            </Transition.Group>
+      {error && <div>An unexpected error has occored!</div>}
+      <Grid columns={1}>
+        <Grid.Row>
+          {user && (
+            <Grid.Column width={15}>
+              <PostForm />
+            </Grid.Column>
           )}
-      </Grid.Row>
-    </Grid>
+        </Grid.Row>
+        <Grid.Row>
+          {loading ? (
+            <h1>Loading posts...</h1>
+          ) : (
+              <Transition.Group>
+                {
+                  data.getPosts && data.getPosts.map(post => (
+                    <Grid.Column
+                      key={post.id}
+                      style={{ marginBottom: 10, marginLeft: 10, marginRight: 10 }}
+                    >
+                      <PostCard
+                        callback={deletePostCallback}
+                        post={post}
+                        refetch={refetch}
+                      />
+                    </Grid.Column>
+                  ))
+                }
+              </Transition.Group>
+            )}
+        </Grid.Row>
+      </Grid>
     </>
   )
 }

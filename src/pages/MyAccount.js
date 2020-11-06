@@ -4,7 +4,7 @@ import { Grid, Card, Image, Icon, Header } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
 import { Redirect } from 'react-router-dom'
 import moment from 'moment'
-import imageCompression from 'browser-image-compression';
+import compressImage from '../util/compressImage'
 
 function MyAccount(props) {
 
@@ -37,33 +37,16 @@ function MyAccount(props) {
   })
 
   const uploadPic = (file) => {
-    //const file = fileRef.current.files[0]
-    if (!file) return
-    setLoading(true)
+    if (!file) return   
     uploadFile({ variables: { file } })
   }
 
-  async function handleImageUpload(event) {
- 
-    const imageFile = fileRef.current.files[0];
-    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
-    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
-   
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1024,
-      useWebWorker: true
-    }
-    try {
-      const compressedFile = await imageCompression(imageFile, options);
-      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
-   
-      uploadPic(compressedFile); // write your own logic
-    } catch (error) {
-      console.log(error);
-    }
-   
+
+  async function handleImageUpload(){
+    setLoading(true)
+    const file = fileRef.current.files[0]
+    const compressedFile = await compressImage(file)
+    uploadPic(compressedFile)
   }
 
   const profilePic = !fileUri || fileUri === '' ? 'https://react.semantic-ui.com/images/avatar/large/molly.png' : fileUri

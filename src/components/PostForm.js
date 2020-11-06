@@ -1,10 +1,12 @@
-import React, { useRef } from 'react'
-import { Form, Button } from 'semantic-ui-react'
+import React, { useRef, useState } from 'react'
+import { Form, Button, Icon } from 'semantic-ui-react'
 
 import { useMutation, gql } from '@apollo/client'
 
 import { useForm } from '../util/hooks'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
+
+import compressImage from '../util/compressImage'
 
 function PostForm() {
 
@@ -14,18 +16,29 @@ function PostForm() {
   })
 
   const uploadFileRef = useRef('')
+  const [loading, setLoading] = useState(false)
+  const [uploadedFilename, setUploadedFilename] = useState('')
 
   const [uploadFile] = useMutation(UPLOAD_FILE, {
     onCompleted: data => {
+      setLoading(false)
+      setUploadedFilename(data.uploadFile.filename)
       console.log(data)
       values.url = data.uploadFile.url
     }
   })
 
-  const handleFileChange = () => {
-    const file = uploadFileRef.current.files[0]
+  const handleFileChange = (file) => {
+    //const file = uploadFileRef.current.files[0]
     if (!file) return
     uploadFile({ variables: { file } })
+  }
+
+  async function handleImageUpload() {
+    setLoading(true)
+    const file = uploadFileRef.current.files[0]
+    const compressedFile = await compressImage(file)
+    handleFileChange(compressedFile)
   }
 
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
@@ -60,7 +73,7 @@ function PostForm() {
 
   return (
     <div>
-      <Form  onSubmit={onSubmit} style={{marginBottom:5, marginLeft:8}}>
+      <Form onSubmit={onSubmit} style={{ marginBottom: 5, marginLeft: 8 }}>
         <Form.Field>
           <Form.Input
             placeholder="Say Something . . ."
@@ -70,15 +83,20 @@ function PostForm() {
             error={error ? true : false}
             width="16"
           />
-          <input
-            title=" "
-            style={{ width: "25rem", border: "inline" }}
-            type="file"          
-            ref={uploadFileRef}
-            onChange={handleFileChange} />
-          <Button style={{margin:'1rem'}} circular size="mini" type="submit" color="teal">
-            Submit
-          </Button>
+          {loading ? <span style={{ textAlign: 'center' }}>
+            <Icon size="huge" loading name="spinner" /></span> :
+            <span>
+              <input
+                title=" "
+                style={{ width: "25rem", border: "inline" }}
+                type="file"
+                ref={uploadFileRef}
+                onChange={handleImageUpload} />
+              <Button style={{ margin: '1rem' }} circular size="mini" type="submit" color="teal">
+                Submit
+              </Button>
+            </span>}
+            <span>{uploadedFilename}</span>
         </Form.Field>
       </Form>
       {

@@ -39,9 +39,15 @@ function authReducer(state, action) {
 
 function AuthProvider(props) {
   const [state, dispatch] = useReducer(authReducer, initialState)
+  var loginClock
 
   function login(userData) {
     localStorage.setItem("jwtToken", userData.token)
+    
+    loginClock = setTimeout(()=>{
+      logout()
+    },60000*60*12) // 12 hours
+
     dispatch({
       type: 'LOGIN',
       payload: userData
@@ -51,6 +57,7 @@ function AuthProvider(props) {
   function logout() {
     localStorage.removeItem("jwtToken")
     localStorage.removeItem("profilePic")
+    clearTimeout(loginClock)
     dispatch({ type: 'LOGOUT' })
   }
 

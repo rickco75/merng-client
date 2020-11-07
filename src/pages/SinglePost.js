@@ -29,6 +29,10 @@ const FETCH_POST_QUERY = gql`
         createdAt
         body
       }
+      user {
+        profilePic
+        createdAt
+      }
       url
     }
   }
@@ -51,7 +55,7 @@ function SinglePost(props) {
     onError: err => {
       console.log(err)
       props.history.push('/')
-    }
+    },
   })
 
   useSubscription(COMMENT_SUBSCRIPTION)
@@ -99,8 +103,14 @@ function SinglePost(props) {
       This post has been removed!
         <hr />
       <Button as={Link} to="/">Return to posts</Button></div>
-  } else {
-    const { id, body, createdAt, username, comments, likes, likeCount, commentCount, url } = data.getPost
+  }
+  else {
+    const { id, body, createdAt, username, comments, likes, likeCount, commentCount, url, user: { profilePic, createdAt: userCreatedAt } } = data.getPost
+
+    const uc = userCreatedAt ? moment(userCreatedAt).format("MMM yyyy") : 'not available'
+    const avatarPopupMessage = `${username} has been a member since ${uc}`
+
+    const profilePicSrc = profilePic ? profilePic : 'https://react.semantic-ui.com/images/avatar/large/molly.png'
 
     function deletePostCallback() {
       props.history.push('/')
@@ -112,7 +122,31 @@ function SinglePost(props) {
           <Grid.Column width={16}>
             <Card fluid>
               <Card.Content>
-                <Card.Header>{username}</Card.Header>
+                <Card.Header>
+                  <MyPopup
+                    content="Go Back To Posts" >
+                    <Button
+                      style={{marginBottom:20}}
+                      as="div"
+                      labelPosition="right">
+                      <Button basic color="blue" as={Link} to="/">
+                        <Icon name="arrow left" />
+                      </Button>
+                    </Button>
+                  </MyPopup>
+                  <MyPopup
+                    content={avatarPopupMessage}>
+                    <Image
+                      avatar
+                      floated='right'
+                      size='mini'
+                      src={profilePicSrc}
+                    />
+                  </MyPopup>
+                </Card.Header>
+                <Card.Header>
+                  {username}
+                </Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
                 <Card.Meta>{commentCount} comment(s)</Card.Meta>
                 <Card.Description>{body}</Card.Description>
@@ -140,16 +174,7 @@ function SinglePost(props) {
               </Card.Content>
               <hr />
               <Card.Content extra>
-                <MyPopup
-                  content="Go Back To Posts" >
-                  <Button
-                    as="div"
-                    labelPosition="right">
-                    <Button basic color="blue" as={Link} to="/">
-                      <Icon name="arrow left" />
-                    </Button>
-                  </Button>
-                </MyPopup>
+
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
 
                 {user && user.username === username && <DeleteButton callback={deletePostCallback} postId={id} />}

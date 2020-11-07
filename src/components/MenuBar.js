@@ -7,7 +7,6 @@ import { AuthContext } from '../context/auth'
 function MenuBar() {
 
   const { user, logout } = useContext(AuthContext)
-
   const handleItemClick = (e, { name }) => setActiveItem(name)
 
   const pathname = window.location.pathname;

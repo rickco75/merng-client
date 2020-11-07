@@ -74,6 +74,9 @@ const cacheOptions = {
         },        
         getPosts:{
           merge: false
+        },
+        user: {
+          merge: false
         }
       }
     }

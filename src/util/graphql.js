@@ -22,6 +22,12 @@ export const FETCH_POSTS_QUERY = gql`
       body
     }
     url
+    user{
+      email
+      profilePic
+      username
+      createdAt
+    }
   }
 }
 `
@@ -89,6 +95,11 @@ export const POST_SUBSCRIPTION = gql`
         body
       }
       url
+      user {        
+        profilePic
+        email
+        createdAt
+      }
     }
   }
 `

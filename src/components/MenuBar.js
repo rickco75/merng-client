@@ -30,17 +30,16 @@ function MenuBar() {
       />
       <Menu.Menu position='right'>
         <Menu.Item
-          name='logout'
-          onClick={logout}
-        />
-        <Menu.Item
           as={Link}
           to="/account"
           name="account"
           active={activeItem === 'account'}
           onClick={handleItemClick}
-        >
-        </Menu.Item>
+        />
+        <Menu.Item
+          name='logout'
+          onClick={logout}
+        />
       </Menu.Menu>
     </Menu>
   ) : (

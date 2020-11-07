@@ -37,6 +37,7 @@ function PostForm() {
   async function handleImageUpload() {
     setLoading(true)
     const file = uploadFileRef.current.files[0]
+    if (!file) return
     const compressedFile = await compressImage(file)
     handleFileChange(compressedFile)
   }
@@ -45,6 +46,7 @@ function PostForm() {
     variables: values,
     onCompleted: data => {
       console.log("createPost onCompleted: ", data)
+      setLoading(false)
     },
     update(proxy, result) {
       const data = proxy.readQuery({
@@ -62,12 +64,14 @@ function PostForm() {
       uploadFileRef.current.value = null
     },
     onError(err) {
-      console.log(err)
+      console.log("Error with create post ", err)
+      setLoading(false)
       //console.log(err.graphQLErrors[0].extensions.exception.errors)
     }
   })
 
   function createPostCallback() {
+    setLoading(true)
     createPost()
   }
 
@@ -83,24 +87,25 @@ function PostForm() {
             error={error ? true : false}
             width="16"
           />
-          {loading ? <span style={{ textAlign: 'center' }}>
-            <Icon size="huge" loading name="spinner" /></span> :
-            <span>
-              <input
-                title=" "
-                style={{ width: "25rem", border: "inline" }}
-                type="file"
-                ref={uploadFileRef}
-                onChange={handleImageUpload} />
-              <Button style={{ margin: '1rem' }} circular size="mini" type="submit" color="teal">
-                Submit
-              </Button>
-            </span>}
-            <span>{uploadedFilename}</span>
+          {loading && <span style={{ textAlign: 'center' }}>
+            <Icon size="huge" loading name="spinner" /></span>}
+          <span>
+            <input
+              title=" "
+              style={{ width: "25rem", border: "inline" }}
+              type="file"
+              ref={uploadFileRef}
+              onChange={handleImageUpload} />
+              {!loading && 
+            <Button style={{ margin: '1rem' }} circular size="mini" type="submit" color="teal">
+              Submit
+              </Button> }
+          </span>
+          <span>{uploadedFilename}</span>
         </Form.Field>
       </Form>
       {
-        error && (
+        error && error.graphQLErrors[0].message && (
           <div className="ui error message" style={{ marginBottom: 20 }}>
             <ul className="list">
               <li>{error.graphQLErrors[0].message}</li>
@@ -145,6 +150,12 @@ const CREATE_POST_MUTATION = gql`
       }
       commentCount
       url
+      user {
+        username
+        email
+        profilePic
+        createdAt
+      }
     }
   }
 `

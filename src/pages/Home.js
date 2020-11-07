@@ -52,8 +52,6 @@ function Home(props) {
     subscribeToDeletedPosts()
   }, [subscribeToNewPosts, subscribeToDeletedPosts])
 
-
-
   return (
     <>
       {error && <div>An unexpected error has occored!</div>}

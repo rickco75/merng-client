@@ -8,12 +8,14 @@ import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
 import MyPopup from '../util/MyPopup'
 
-function PostCard({ callback, post: { body, createdAt, id, username, userCreated, likeCount, commentCount, likes, url } }) {
+function PostCard({ callback, post: { body, createdAt, id, username, userCreated, likeCount, commentCount, likes, url, user: {profilePic, createdAt: userCreatedAt} } }) {
 
   const { user } = useContext(AuthContext)
 
-  const uc =  userCreated ? moment(userCreated).format("MMM yyyy") : 'not available'
+  const uc =  userCreatedAt ? moment(userCreatedAt).format("MMM yyyy") : 'not available'
   const avatarPopupMessage = `${username} has been a member since ${uc}`
+
+  const profilePicSrc = profilePic ? profilePic : 'https://react.semantic-ui.com/images/avatar/large/molly.png'
 
   return (
     <Card fluid raised>
@@ -24,7 +26,7 @@ function PostCard({ callback, post: { body, createdAt, id, username, userCreated
             avatar
             floated='right'
             size='mini'
-            src='https://react.semantic-ui.com/images/avatar/large/molly.png'
+            src={profilePicSrc}
           />
         </MyPopup>
         <Card.Header>{username}</Card.Header>

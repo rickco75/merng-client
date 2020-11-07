@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
 
 import { useQuery, useMutation, useSubscription, gql } from '@apollo/client'
-import { Button, Card, Grid, Image, Label, Icon, Form, Modal } from 'semantic-ui-react'
+import { Button, Card, Grid, Image, Icon, Form, Modal } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 import moment from 'moment'

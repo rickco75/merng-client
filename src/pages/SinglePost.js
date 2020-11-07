@@ -9,7 +9,7 @@ import LikeButton from '../components/LikeButton'
 import { AuthContext } from '../context/auth'
 import DeleteButton from '../components/DeleteButton'
 import MyPopup from '../util/MyPopup'
-import { COMMENT_SUBSCRIPTION, DELETE_COMMENT_SUBSCRIPTION } from '../util/graphql'
+import { COMMENT_SUBSCRIPTION, DELETE_COMMENT_SUBSCRIPTION, POST_SUBSCRIPTION } from '../util/graphql'
 
 const FETCH_POST_QUERY = gql`
   query($postId:ID!){
@@ -60,7 +60,8 @@ function SinglePost(props) {
 
   useSubscription(COMMENT_SUBSCRIPTION)
   useSubscription(DELETE_COMMENT_SUBSCRIPTION)
-
+  useSubscription(POST_SUBSCRIPTION)
+  
   const subscribeToNewComments = useCallback(() => {
     subscribeToMore({
       document: COMMENT_SUBSCRIPTION,

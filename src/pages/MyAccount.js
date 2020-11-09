@@ -39,26 +39,42 @@ function MyAccount(props) {
 
   useEffect(() => {
     // aquire users location information
-    // fetch('https://api.ipify.org?format=json')
-    //   .then(response => {
-    //     return response.json();
-    // }).then((res) => {
-    //   console.log(res.ip)
-    fetch(`http://ip-api.com/json`, {
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(res => {
-        setUserLocation(res)
-        setLat(res.lat)
-        setLng(res.lon)
-        setZoom(10)
-        setLocationLoaded(true)
+    fetch('https://api.ipify.org?format=json')
+      .then(response => {
+        return response.json();
       })
-      .catch(err => console.log("error fetching location details ", err))
+      .then((res) => {
+        console.log(res.ip)
+        fetch(`https://ipapi.co/${res.ip}/json/`)
+          .then(response => response.json())
+          .then(res => {
+            console.log('ipapi: ', res)
+            setUserLocation(res)
+            setLat(res.latitude)
+            setLng(res.longitude)
+            setZoom(10)
+            setLocationLoaded(true)
+          })
+          .catch(err => console.log("ipapi.co error: ", err))
+      })
+      .catch(err=> console.log("api.ipify.org error: ", err))
+
+    // fetch(`http://ip-api.com/json`, {
+    //   credentials: 'same-origin',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    //   .then(response => response.json())
+    //   .then(res => {
+    //     console.log(res)
+    //     setUserLocation(res)
+    //     setLat(res.lat)
+    //     setLng(res.lon)
+    //     setZoom(10)
+    //     setLocationLoaded(true)
+    //   })
+    //   .catch(err => console.log("error fetching location details ", err))
     // }).catch((err) => console.error('Problem fetching my IP Address', err))
   }, [])
 
@@ -149,10 +165,10 @@ function MyAccount(props) {
                     {userLocation && (
                       <div style={{ marginTop: 10, textAlign: 'center' }}>
                         <Card.Description>
-                          {userLocation.city} {userLocation.regionName}, {userLocation.zip}
+                          {userLocation.city} {userLocation.region}, {userLocation.postal}
                         </Card.Description>
                         <Card.Meta>
-                          Current IP: {userLocation.query}
+                          Current IP: {userLocation.ip}
                         </Card.Meta>
                       </div>
                     )}

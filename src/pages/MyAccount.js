@@ -39,26 +39,27 @@ function MyAccount(props) {
 
   useEffect(() => {
     // aquire users location information
-    fetch('https://api.ipify.org?format=json')
-      .then(response => {
-        return response.json();
-    }).then((res) => {
-      fetch(`http://ip-api.com/json/${res.ip}`,{
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+    // fetch('https://api.ipify.org?format=json')
+    //   .then(response => {
+    //     return response.json();
+    // }).then((res) => {
+    //   console.log(res.ip)
+    fetch(`http://ip-api.com/json`, {
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(res => {
+        setUserLocation(res)
+        setLat(res.lat)
+        setLng(res.lon)
+        setZoom(10)
+        setLocationLoaded(true)
       })
-        .then(response => response.json())
-        .then(res => {
-          setUserLocation(res)
-          setLat(res.lat)
-          setLng(res.lon)
-          setZoom(10)
-          setLocationLoaded(true)
-        })
-        .catch(err => console.log("error fetching location details ", err))
-    }).catch((err) => console.error('Problem fetching my IP Address', err))
+      .catch(err => console.log("error fetching location details ", err))
+    // }).catch((err) => console.error('Problem fetching my IP Address', err))
   }, [])
 
   useEffect(() => {
@@ -82,7 +83,7 @@ function MyAccount(props) {
     return () => map.remove();
 
   }, [locationLoaded])
-  
+
   const [uploadFile] = useMutation(UPLOAD_FILE, {
     onCompleted: data => {
       console.log(data)

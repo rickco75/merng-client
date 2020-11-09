@@ -29,20 +29,26 @@ function MyAccount(props) {
   const [loading, setLoading] = useState(false)
 
   const [userLocation, setUserLocation] = useState(null)
+  const [locationLoaded, setLocationLoaded] = useState(false)
 
   const [lng, setLng] = useState(-77.3788)
   const [lat, setLat] = useState(69.3145)
   const [zoom, setZoom] = useState(9)
-  const [locationLoaded, setLocationLoaded] = useState(false)
   const fileRef = useRef('')
   const mapContainerRef = useRef(null)
 
   useEffect(() => {
     // aquire users location information
-    fetch('https://api.ipify.org?format=json').then(response => {
-      return response.json();
+    fetch('https://api.ipify.org?format=json')
+      .then(response => {
+        return response.json();
     }).then((res) => {
-      fetch(`http://ip-api.com/json/${res.ip}`)
+      fetch(`http://ip-api.com/json/${res.ip}`,{
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
         .then(response => response.json())
         .then(res => {
           setUserLocation(res)
@@ -76,6 +82,7 @@ function MyAccount(props) {
     return () => map.remove();
 
   }, [locationLoaded])
+  
   const [uploadFile] = useMutation(UPLOAD_FILE, {
     onCompleted: data => {
       console.log(data)
@@ -104,7 +111,6 @@ function MyAccount(props) {
     <>
       {!user ? <Redirect to="/login" /> :
         <>
-
           <Grid centered>
             <Grid.Row centered>
               <Grid.Column width={4}>

@@ -61,7 +61,7 @@ function SinglePost(props) {
   useSubscription(COMMENT_SUBSCRIPTION)
   useSubscription(DELETE_COMMENT_SUBSCRIPTION)
   useSubscription(POST_SUBSCRIPTION)
-  
+
   const subscribeToNewComments = useCallback(() => {
     subscribeToMore({
       document: COMMENT_SUBSCRIPTION,

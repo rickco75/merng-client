@@ -10,8 +10,7 @@
   margin: auto;
 }
 
-.ui.teal.button:focus, 
-.ui.teal.buttons .button:focus {
+.ui.teal.button:focus, .ui.teal.buttons .button:focus {
   background-color: #00b5ad;
 }
 
@@ -20,12 +19,7 @@
   letter-spacing: 7pt;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="text"],
-input[type="password"],
-textarea,
-body {
+input[type="text"], input[type="number"], input[type="text"], input[type="password"], textarea, body {
   /* background-color: #e9ebeb; */
   font-size: 16px;
   font-family: Georgia, 'Times New Roman', Times, serif;
@@ -35,7 +29,7 @@ body {
   max-height: 4rem;
 }
 
-.stickyHeader{
+.stickyHeader {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -45,4 +39,25 @@ body {
 .cardShadow {
   box-shadow: 10px -10px #CCC;
   border-radius: 22rem;
+}
+
+.mapContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.sidebarStyle {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 12px;
+  background-color: #404040;
+  color: #ffffff;
+  z-index: 1 !important;
+  padding: 6px;
+  font-weight: bold;
 }

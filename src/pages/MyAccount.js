@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { Grid, Card, Image, Icon, Header } from 'semantic-ui-react'
 import { AuthContext } from '../context/auth'
 import { Redirect } from 'react-router-dom'
@@ -38,23 +38,6 @@ function MyAccount(props) {
   const mapContainerRef = useRef(null)
 
 
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      console.log("Geolocation is not supported by this browser.")
-    }
-  }
-
-  function showPosition(position) {
-    console.log(position)
-    setLat(position.coords.latitude)
-    setLng(position.coords.longitude)
-    setZoom(10)
-    setLocationLoaded(true)
-  }
-
-
   useEffect(() => {
     // aquire users location information
     // fetch('https://api.ipify.org?format=json')
@@ -63,18 +46,18 @@ function MyAccount(props) {
     //   })
     //   .then((res) => {
     //     console.log(res.ip)
-        fetch(`https://ipapi.co/json/`)
-          .then(response => response.json())
-          .then(res => {
-            console.log('ipapi res.latitude: ', res.latitude)
-            console.log('ipapi res.longitude: ', res.longitude)
-            console.log('ipapi res: ', res)
-            setUserLocation(res)
-            // setLat(res.latitude)
-            // setLng(res.longitude)
-            // setZoom(10)
-            // setLocationLoaded(true)
-          })
+    fetch(`https://ipapi.co/json/`)
+      .then(response => response.json())
+      .then(res => {
+        // console.log('ipapi res.latitude: ', res.latitude)
+        // console.log('ipapi res.longitude: ', res.longitude)
+        // console.log('ipapi res: ', res)
+        setUserLocation(res)
+        // setLat(res.latitude)
+        // setLng(res.longitude)
+        // setZoom(10)
+        // setLocationLoaded(true)
+      })
     //       .catch(err => console.log("ipapi.co error: ", err))
     //   })
     //   .catch(err=> console.log("api.ipify.org error: ", err))
@@ -96,32 +79,50 @@ function MyAccount(props) {
     //   })
     //   .catch(err => console.log("error fetching location details ", err))
     // }).catch((err) => console.error('Problem fetching my IP Address', err))
-    if (!locationLoaded){
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        console.log("Geolocation is not supported by this browser.")
+      }
+    }
+
+    function showPosition(position) {
+      // console.log(position)
+      setLat(position.coords.latitude)
+      setLng(position.coords.longitude)
+      setZoom(10)
+      setLocationLoaded(true)
+    }
+
+    if (!locationLoaded) {
       getLocation()
     }
-  }, [])
+  }, [locationLoaded])
 
   useEffect(() => {
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/outdoors-v11',
-      center: [lng, lat],
-      zoom: zoom
-    });
+    if (user) {
+      const map = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: 'mapbox://styles/mapbox/outdoors-v11',
+        center: [lng, lat],
+        zoom: zoom
+      });
 
-    // Add navigation control (the +/- zoom buttons)
-    map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+      // Add navigation control (the +/- zoom buttons)
+      map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
-    if (locationLoaded) {
-      map.on('load', () => {
-        map.setCenter({ lon: lng, lat: lat })
-      })
+      if (locationLoaded) {
+        map.on('load', () => {
+          map.setCenter({ lon: lng, lat: lat })
+        })
+      }
+
+      // Clean up on unmount
+      return () => map.remove();
     }
 
-    // Clean up on unmount
-    return () => map.remove();
-
-  }, [locationLoaded])
+  }, [locationLoaded, lng, lat, user, zoom])
 
   const [uploadFile] = useMutation(UPLOAD_FILE, {
     onCompleted: data => {
@@ -130,6 +131,15 @@ function MyAccount(props) {
       setLoading(false)
       localStorage.setItem("profilePic", data.uploadProfilePic.url)
       fileRef.current.value = ''
+    }
+  })
+
+  const { data: userStatistics, loading: userMetricsLoading } = useQuery(GET_USER_STATISTICS, {
+    variables: {
+      username: user.username
+    },
+    onCompleted: data => {
+      console.log(data)
     }
   })
 
@@ -173,7 +183,7 @@ function MyAccount(props) {
                         float="right"
                         alt="File was not found!"
                       />
-                      <div style={{ textAlign: 'center', paddingTop: '10px' }}>
+                      <div style={{ textAlign: 'center', paddingTop: '10px', paddingBottom: '8px' }}>
                         <input
                           type="file"
                           ref={fileRef}
@@ -181,24 +191,53 @@ function MyAccount(props) {
                           onChange={handleImageUpload} />
                       </div>
                     </span>}
-                  <Card.Content centered="true">
-                    <Card.Header>{user.username} </Card.Header>
-                    <Card.Meta>Member since {moment(user.createdAt).format('MMM DD, YYYY')}</Card.Meta>
-                    <Card.Description>{user.email}</Card.Description>
-                    {userLocation && (
-                      <div style={{ marginTop: 10, textAlign: 'center' }}>
-                        <Card.Description>
-                          {userLocation.city} {userLocation.region}, {userLocation.postal}
-                        </Card.Description>
-                        <Card.Meta>
-                          Current IP: {userLocation.ip}
-                        </Card.Meta>
-                      </div>
-                    )}
+                </Card>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={12}>
+                <Card fluid raised centered>
+                  <Card.Content>
+                    <Card.Header>User Information</Card.Header>
+                    <Card.Description><h4>User Name: {user.username}</h4></Card.Description>
+                    <Card.Description>Email: {user.email}</Card.Description>
+                    <Card.Description>Member since {moment(user.createdAt).format('MMM DD, YYYY')}</Card.Description>
                   </Card.Content>
                 </Card>
               </Grid.Column>
             </Grid.Row>
+            {userMetricsLoading ? 'Loading User Metrics' : (
+              <Grid.Row>
+                <Grid.Column width={12}>
+                  <Card fluid raised centered>
+                    <Card.Content>
+                      <Card.Header>Statistics</Card.Header>
+                      <Card.Description>Total Posts: {userStatistics.getUserStatistics.totalPosts}</Card.Description>
+                      <Card.Description>Total Comments: {userStatistics.getUserStatistics.totalComments}</Card.Description>
+                      <Card.Description>Total Likes: {userStatistics.getUserStatistics.totalLikes}</Card.Description>                                            
+                      <Card.Description></Card.Description>
+                    </Card.Content>
+                  </Card>
+                </Grid.Column>
+              </Grid.Row>
+            )}
+            {userLocation && (
+              <Grid.Row>
+                <Grid.Column width={12}>
+                  <Card fluid raised centered>
+                    <Card.Content>
+                      <Card.Header>Location Information</Card.Header>
+                      <Card.Description>
+                        {userLocation.city} {userLocation.region}, {userLocation.postal}
+                      </Card.Description>
+                      <Card.Description>
+                        Current IP: {userLocation.ip}
+                      </Card.Description>
+                    </Card.Content>
+                  </Card>
+                </Grid.Column>
+              </Grid.Row>
+            )}
             <Grid.Row>
               <Grid.Column width={12}>
                 <Card fluid raised centered>
@@ -219,6 +258,15 @@ function MyAccount(props) {
   )
 }
 
+const GET_USER_STATISTICS = gql`
+  query getUserStatistics($username: String!){
+    getUserStatistics(username: $username){
+      totalPosts
+      totalLikes
+      totalComments
+    }
+  }
+`
 const UPLOAD_FILE = gql`
   mutation uploadProfilePic($file: Upload!){
     uploadProfilePic(file:$file){

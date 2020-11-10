@@ -33,7 +33,12 @@ input[type="text"], input[type="number"], input[type="text"], input[type="passwo
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: dimgray;
+}
+
+.stickyPostForm {
+  position: sticky;
+  top: 0;
+  z-index: 90;
 }
 
 .cardShadow {

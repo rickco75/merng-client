@@ -76,7 +76,7 @@ function PostForm() {
   }
 
   return (
-    <div>
+    <div className="stickyPostForm">
       <Form onSubmit={onSubmit} style={{ marginBottom: 5, marginLeft: 8 }}>
         <Form.Field>
           <Form.Input

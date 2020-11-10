@@ -48,7 +48,8 @@ function MyAccount(props) {
         fetch(`https://ipapi.co/${res.ip}/json/`)
           .then(response => response.json())
           .then(res => {
-            console.log('ipapi: ', res)
+            console.log('ipapi res.latitude: ', res.latitude)
+            console.log('ipapi res.longitude: ', res.longitude)
             setUserLocation(res)
             setLat(res.latitude)
             setLng(res.longitude)

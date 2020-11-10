@@ -166,12 +166,12 @@ function MyAccount(props) {
               <Grid.Column width={4}>
                 <Header as='h2' icon float="center">
                   <Icon name='settings' />
-                  Account Settings
+                  Account
                 </Header>
               </Grid.Column>
             </Grid.Row>
             <Grid.Row centered>
-              <Grid.Column width={12}>
+              <Grid.Column width={14}>
                 <Card fluid raised centered>
                   {loading ?
                     <span style={{ textAlign: 'center' }}>
@@ -195,7 +195,7 @@ function MyAccount(props) {
               </Grid.Column>
             </Grid.Row>
             <Grid.Row>
-              <Grid.Column width={12}>
+              <Grid.Column width={14}>
                 <Card fluid raised centered>
                   <Card.Content>
                     <Card.Header>User Information</Card.Header>
@@ -208,14 +208,15 @@ function MyAccount(props) {
             </Grid.Row>
             {userMetricsLoading ? 'Loading User Metrics' : (
               <Grid.Row>
-                <Grid.Column width={12}>
+                <Grid.Column width={14}>
                   <Card fluid raised centered>
                     <Card.Content>
                       <Card.Header>Statistics</Card.Header>
                       <Card.Description>Total Posts: {userStatistics.getUserStatistics.totalPosts}</Card.Description>
                       <Card.Description>Total Comments: {userStatistics.getUserStatistics.totalComments}</Card.Description>
-                      <Card.Description>Total Likes: {userStatistics.getUserStatistics.totalLikes}</Card.Description>                                            
-                      <Card.Description></Card.Description>
+                      <Card.Description>Total Likes: {userStatistics.getUserStatistics.totalLikes}</Card.Description>        
+                      <Card.Description>Latest Post: {moment(userStatistics.getUserStatistics.latestPost).fromNow()}</Card.Description>                      
+                      <Card.Description>Earliest Post: {moment(userStatistics.getUserStatistics.earliestPost).fromNow()}</Card.Description>
                     </Card.Content>
                   </Card>
                 </Grid.Column>
@@ -223,7 +224,7 @@ function MyAccount(props) {
             )}
             {userLocation && (
               <Grid.Row>
-                <Grid.Column width={12}>
+                <Grid.Column width={14}>
                   <Card fluid raised centered>
                     <Card.Content>
                       <Card.Header>Location Information</Card.Header>
@@ -239,7 +240,7 @@ function MyAccount(props) {
               </Grid.Row>
             )}
             <Grid.Row>
-              <Grid.Column width={12}>
+              <Grid.Column width={14}>
                 <Card fluid raised centered>
                   <div style={{ textAlign: 'center', height: '400px' }}></div>
                   <Card.Content centered="true">
@@ -263,7 +264,9 @@ const GET_USER_STATISTICS = gql`
     getUserStatistics(username: $username){
       totalPosts
       totalLikes
-      totalComments
+      totalComments,
+      earliestPost,
+      latestPost
     }
   }
 `

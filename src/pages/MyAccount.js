@@ -31,34 +31,53 @@ function MyAccount(props) {
   const [userLocation, setUserLocation] = useState(null)
   const [locationLoaded, setLocationLoaded] = useState(false)
 
-  const [lng, setLng] = useState(-77.3788)
-  const [lat, setLat] = useState(69.3145)
-  const [zoom, setZoom] = useState(9)
+  const [lng, setLng] = useState(-89.3064)
+  const [lat, setLat] = useState(31.308)
+  const [zoom, setZoom] = useState(2)
   const fileRef = useRef('')
   const mapContainerRef = useRef(null)
 
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      console.log("Geolocation is not supported by this browser.")
+    }
+  }
+
+  function showPosition(position) {
+    console.log(position)
+    setLat(position.coords.latitude)
+    setLng(position.coords.longitude)
+    setZoom(10)
+    setLocationLoaded(true)
+  }
+
+
   useEffect(() => {
     // aquire users location information
-    fetch('https://api.ipify.org?format=json')
-      .then(response => {
-        return response.json();
-      })
-      .then((res) => {
-        console.log(res.ip)
-        fetch(`https://ipapi.co/${res.ip}/json/`)
+    // fetch('https://api.ipify.org?format=json')
+    //   .then(response => {
+    //     return response.json();
+    //   })
+    //   .then((res) => {
+    //     console.log(res.ip)
+        fetch(`https://ipapi.co/json/`)
           .then(response => response.json())
           .then(res => {
             console.log('ipapi res.latitude: ', res.latitude)
             console.log('ipapi res.longitude: ', res.longitude)
+            console.log('ipapi res: ', res)
             setUserLocation(res)
-            setLat(res.latitude)
-            setLng(res.longitude)
-            setZoom(10)
-            setLocationLoaded(true)
+            // setLat(res.latitude)
+            // setLng(res.longitude)
+            // setZoom(10)
+            // setLocationLoaded(true)
           })
-          .catch(err => console.log("ipapi.co error: ", err))
-      })
-      .catch(err=> console.log("api.ipify.org error: ", err))
+    //       .catch(err => console.log("ipapi.co error: ", err))
+    //   })
+    //   .catch(err=> console.log("api.ipify.org error: ", err))
 
     // fetch(`http://ip-api.com/json`, {
     //   credentials: 'same-origin',
@@ -77,6 +96,9 @@ function MyAccount(props) {
     //   })
     //   .catch(err => console.log("error fetching location details ", err))
     // }).catch((err) => console.error('Problem fetching my IP Address', err))
+    if (!locationLoaded){
+      getLocation()
+    }
   }, [])
 
   useEffect(() => {

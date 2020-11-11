@@ -91,7 +91,7 @@ function MyAccount(props) {
       // console.log(position)
       setLat(position.coords.latitude)
       setLng(position.coords.longitude)
-      setZoom(10)
+      setZoom(11)
       setLocationLoaded(true)
     }
 
@@ -116,6 +116,9 @@ function MyAccount(props) {
         map.on('load', () => {
           map.setCenter({ lon: lng, lat: lat })
         })
+        var marker = new mapboxgl.Marker()
+          .setLngLat([lng, lat])
+          .addTo(map);
       }
 
       // Clean up on unmount
@@ -214,8 +217,8 @@ function MyAccount(props) {
                       <Card.Header>Statistics</Card.Header>
                       <Card.Description>Total Posts: {userStatistics.getUserStatistics.totalPosts}</Card.Description>
                       <Card.Description>Total Comments: {userStatistics.getUserStatistics.totalComments}</Card.Description>
-                      <Card.Description>Total Likes: {userStatistics.getUserStatistics.totalLikes}</Card.Description>        
-                      <Card.Description>Latest Post: {moment(userStatistics.getUserStatistics.latestPost).fromNow()}</Card.Description>                      
+                      <Card.Description>Total Likes: {userStatistics.getUserStatistics.totalLikes}</Card.Description>
+                      <Card.Description>Latest Post: {moment(userStatistics.getUserStatistics.latestPost).fromNow()}</Card.Description>
                       <Card.Description>Earliest Post: {moment(userStatistics.getUserStatistics.earliestPost).fromNow()}</Card.Description>
                     </Card.Content>
                   </Card>

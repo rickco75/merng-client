@@ -66,7 +66,6 @@ function PostForm() {
     onError(err) {
       console.log("Error with create post ", err)
       setLoading(false)
-      //console.log(err.graphQLErrors[0].extensions.exception.errors)
     }
   })
 

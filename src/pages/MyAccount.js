@@ -139,7 +139,7 @@ function MyAccount(props) {
 
   const { data: userStatistics, loading: userMetricsLoading } = useQuery(GET_USER_STATISTICS, {
     variables: {
-      username: user.username
+      username: user ? user.username : ''
     },
     onCompleted: data => {
       console.log(data)
@@ -218,8 +218,8 @@ function MyAccount(props) {
                       <Card.Description>Total Posts: {userStatistics.getUserStatistics.totalPosts}</Card.Description>
                       <Card.Description>Total Comments: {userStatistics.getUserStatistics.totalComments}</Card.Description>
                       <Card.Description>Total Likes: {userStatistics.getUserStatistics.totalLikes}</Card.Description>
-                      <Card.Description>Latest Post: {moment(userStatistics.getUserStatistics.latestPost).fromNow()}</Card.Description>
-                      <Card.Description>Earliest Post: {moment(userStatistics.getUserStatistics.earliestPost).fromNow()}</Card.Description>
+                      <Card.Description>Latest Post: {userStatistics.getUserStatistics.latestPost === 'n/a' ? 'n/a' : moment(userStatistics.getUserStatistics.latestPost).fromNow()}</Card.Description>
+                      <Card.Description>Earliest Post: {userStatistics.getUserStatistics.earliestPost === 'n/a' ? 'n/a' : moment(userStatistics.getUserStatistics.earliestPost).fromNow()}</Card.Description>
                     </Card.Content>
                   </Card>
                 </Grid.Column>

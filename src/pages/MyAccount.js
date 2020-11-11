@@ -91,7 +91,7 @@ function MyAccount(props) {
       // console.log(position)
       setLat(position.coords.latitude)
       setLng(position.coords.longitude)
-      setZoom(11)
+      setZoom(10)
       setLocationLoaded(true)
     }
 
@@ -166,10 +166,10 @@ function MyAccount(props) {
         <>
           <Grid centered>
             <Grid.Row centered>
-              <Grid.Column width={4}>
+              <Grid.Column width={14} style={{textAlign:'center'}}>
                 <Header as='h2' icon float="center">
-                  <Icon name='settings' />
-                  Account
+                  <span style={{textAlign:'center'}}><Icon name='settings' />
+                  Welcome {user.username}! </span>
                 </Header>
               </Grid.Column>
             </Grid.Row>
